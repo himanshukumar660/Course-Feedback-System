@@ -52,7 +52,7 @@ body {
 }
 
 .showReply, #postReply{
-  cursor: pointer;
+    cursor: pointer;
     margin: 5px;
     max-width: 104px;
     min-width: 72px;
@@ -78,13 +78,18 @@ body {
     color: #fff;
     border: none;
 }
-#logoutLogo{
+#logoutBtn{
   float: right;
   margin: 5px;
   margin-right: 50px;
   padding: 5px;
-  font-size: 40px;
   cursor: pointer;
+  background-color: #fb838c;
+}
+#logoutBtn:hover{
+  box-shadow: 0 1px 2px 0 rgba(255,0,0,0.451), 0 1px 3px 1px rgba(255,0,0,0.302);
+  background-color: red;
+  border: none;
 }
 #logInLogo{
     font-size: 40px;
@@ -116,7 +121,7 @@ body {
   display:inline-flex;
 }
 
-#showReplydiv{
+.showReplyDiv{
   float:right;
   float: right;
   padding: 0px;
@@ -134,6 +139,7 @@ body {
   border: 1px solid lightgray;
   font-size: 14px;
   outline: none;
+  padding: 5px;
 }
 
 #reviewTextDiv{
@@ -145,7 +151,16 @@ body {
   border:1px solid #eee;
 }
 .reviewList{
-  list-style: none;padding: 5px;margin:5px;overflow-y: scroll;position: absolute;z-index:-1000;width: 98%;height:400px;
+  list-style: none;
+  overflow-y: scroll;
+  position: absolute;
+  z-index:-1000;
+  width: 100%;
+  height:400px;
+}
+.reviewList li{
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 ::-webkit-scrollbar {
     width: 0px;  /* remove scrollbar space */
@@ -352,6 +367,9 @@ table tr {
   bottom:-100px;
   display: none;
   font-size: 14px!important;
+}
+.indexPage{
+  display: none;
 }
 #mMines{
   width: 60%;
@@ -614,6 +632,7 @@ hr{
   height: 39px;
   width:100%;
   outline: none;
+  border-color: #eee;
 }
 .options p{
   font-size: 15px;
