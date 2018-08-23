@@ -280,6 +280,42 @@ router.get('/outlet', ensureAuthentication, function(req, res, next){
     });
 });
 
+router.get('/outlet/reviews/:outletId', ensureAuthentication, function(req, res, next){
+  console.log("Hi");
+  Org.getReviewsById(req.params.outletId, function(err_org, res_org){
+    if(err_org){
+      res.status(400).send({
+        message : "Unable to reviews",
+        error : err_org
+      });
+    }
+    else{
+      var reviews = [];
+      if(res_org[0])
+        reviews = res_org[0].reviews
+      res.status(200).send({
+        reviewList : reviews
+      })
+    }
+  })
+});
+
+router.get('/outlet/to_reply/:outletId', [ensureAuthentication, checkOwnerPriority], function(username, req, res, next){
+  Org.getToReplyReviews(req.params.outletId, username, function(err_org, res_org){
+    if(err_org){
+      res.status(400).send({
+        message : "Unable to get uncommented reviews",
+        error : err_org
+      });
+    }
+    else{
+      res.status(200).send({
+        reviews : res_org.reviews
+      })
+    }
+  })
+});
+
 router.get('/outlet/:userId', [ensureAuthentication, getUsernameById], function(username, req , res, next){
     Org.getOrgByUserName(username, function(org_err, org_res){
         if(org_err){

@@ -1,6 +1,8 @@
 body {
   font: 15px "QuickSand", Helvetica, Arial, sans-serif;
   font-weight: 400;
+  color:black;
+  text-shadow: 0px 1px 0 #eee;
 }
 ::placeholder{
   font-weight: 400;
@@ -44,12 +46,16 @@ body {
   margin:0px;
   width:100%;
   padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
 }
 #restaurantExReview{
   float:right;
   margin:0px;
   padding: 0px;
+  width:100%;
+  display: none;
 }
+
 #restaurantUtilities, #resultmessage{
   width: 100%;
   float:right;
@@ -95,18 +101,19 @@ body {
   margin: 10px;
   width:100%;
 }
+
 #logoutBtn{
   float: right;
-  margin: 5px;
-  margin-right: 50px;
-  padding: 5px;
   cursor: pointer;
-  background-color: #fb838c;
+  margin : 0px;
+  background: unset;
+  border:none;
+  font-weight: 500;
+  color: red;
 }
+
 #logoutBtn:hover{
-  box-shadow: 0 1px 2px 0 rgba(255,0,0,0.451), 0 1px 3px 1px rgba(255,0,0,0.302);
-  background-color: red;
-  border: none;
+  font-weight: 800;
 }
 #logInLogo{
     font-size: 40px;
@@ -145,9 +152,10 @@ body {
 .showReplyDiv{
   float:right;
   padding: 0px;
+  padding-top: 10px;
   margin: 0px;
   width: 100%;
-  margin-top:-22px;
+  margin-top:-25px;
 }
 #replyPostText{
   width: 100%;
@@ -165,11 +173,15 @@ body {
 
 #reviewTextDiv{
   float:right;
-  padding:0px;
+  padding-left:10px;
+  padding-right: 10px;
   margin:5px;
+  width:100%;
+  background-color : white;
 }
 #reviewTableDiv{
   border:1px solid #eee;
+  width:100%;
 }
 .reviewList{
   list-style: none;
@@ -177,7 +189,8 @@ body {
   position: absolute;
   z-index:-1000;
   width: 100%;
-  height:400px;
+  height:600px;
+  padding-bottom: 200px;
 }
 .reviewList li{
   margin-top: 5px;
@@ -193,13 +206,19 @@ ul.reviewList li{
 #reviewInfoDiv{
   width:100%;
   float:left;
+  border-bottom: 1px solid #eee;
+  color : black;
+  font-size: 12px;
+  font-weight: 500;
   margin:0px;
   background-color: #eff7ff;
-  width:100%;
 }
 #sepRev{
   border-left: 1px solid #eee;
-  width: 50%;
+  min-width: 50%;
+  float: right;
+  padding-left: 20px;
+  text-align: center;
 }
 .sResultBox table{
   width: 100%;
@@ -457,15 +476,15 @@ table tr {
 }
 .star-ratings-css {
   unicode-bidi: bidi-override;
-  color: #d1d5da;
+  color: #eee;
   font-size: 20px;
   height: 20px;
   width: 100px;
   margin: 0 auto;
   position: relative;
   padding-left: 2px;
-  text-shadow: 0px 1px 0 #a2a2a2;
-  transform: scale(0.7);
+  text-shadow: 0px 1px 0 #eee;
+  transform: scale(0.9);
 }
 
 .star-ratings-css-top {
@@ -598,9 +617,15 @@ img#sImgHeader{
   width:100%;
 }
 #pReviewText, #nReviewText, #replyText{
-  font-size: 13px;
+  font-size: 15px;
   padding: 10px;
   padding-top: 0px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+#pReviewText{
+  min-width: 100%;
 }
 #restaurantBigRating{
   text-align: center;

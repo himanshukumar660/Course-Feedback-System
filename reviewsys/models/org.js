@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 var uniqueValidator = require("mongoose-unique-validator");
 var bcrypt = require("bcrypt");
 var SALT_WORK_FACTOR = 10;
+var ObjectID = require("mongodb").ObjectID;
 var Review =
 
 mongoose.connect("mongodb://127.0.0.1:27017/reviewsys");
@@ -129,3 +130,35 @@ module.exports.replyReviewById = function(reviewId, orgId, callback){
 		}
 	}).exec(callback);
 };
+
+module.exports.getReviewsById = function(outletId, callback){
+	outletId = new ObjectID(outletId);
+	Org.aggregate(
+		[
+		{
+			$match : {
+				_id : outletId
+			}
+		},
+		{
+			$unwind : '$reviews'
+		},
+		{
+			$sort : {'reviews.date' : -1}
+		},
+		{
+			$group : {
+				_id : outletId,
+				reviews : {
+					$push : '$reviews'
+				}
+		}
+	}]).exec(callback);
+}
+
+module.exports.getToReplyReviews = function(outletId, username, callback){
+	Org.findOne({
+		_id : outletId,
+		"metadata.owner" : username
+	}, {reviews : 1, _id : 0}, callback);
+}

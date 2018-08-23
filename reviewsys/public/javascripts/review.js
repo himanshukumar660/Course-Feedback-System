@@ -21,12 +21,10 @@ $(document).on('click', '#logInLink', function() {
 	transitForms(elem);
 });
 
-function showReply() {
-	$("#showReplyBtn").click(function() {
+$(document).on('click', '#showReplyBtn', function(){
 		$(this).hide();
 		$(this).parent().find("p#replyText").show();
-	})
-};
+});
 
 (function toggleFilterBtn() {
 	$("#fScore").click(function() {
@@ -162,7 +160,6 @@ function showReply() {
 				400: function(res) {
 					var data = res.responseJSON;
 					showLoginError(data.message);
-					console.log(res.errors);
 					for (var ech in data.errors) {
 						$("#inputRegisterFeilds input[name=" + data.errors[ech].param + "]").val("");
 
@@ -329,66 +326,219 @@ function addOutletDiv(outletObj) {
             <p> ' + outletObj.avgRating + ' </p>\
             <div class="rStats">\
               <div class="star-ratings-css">\
-                <div class="star-ratings-css-top"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>\
+								<div class="star-ratings-css-top">'
+
+								for(var i=0;i<outletObj.avgRating;i++){
+								 outletDiv = outletDiv + '<span>★</span>';
+							 }
+
+								outletDiv = outletDiv + '</div>\
                 <div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>\
               </div>\
             </div>\
-            <p style="font-size:10px;margin:0px;padding:0px;">(Avg. Rating)</p>\
+            <p style="font-size:10px;margin:0px;padding:0px;">(' + outletObj.num_reviews + ' Reviews)</p>\
           </td>\
         </tr>\
-				<tr id="resultmessage">\
-				<td style="float:left;width:100%">\
-				<div class="alert alert-success" id="succReviewPost" style="margin-left:10px;margin-right:10px;">\
-				<b>Success</b>\
-				</div>\
-				<div class="alert alert-danger" id="errReviewPost" style="margin-left:10px;margin-right:10px"><b>Error</b>\
-				</textarea>\
+				  </td>\
+		</tr></tbody></table>\
+		<table id="restaurantExReview">\
+			<tr style="width:100%;margin:0px;display:inline-flex">\
+				<td style="padding-left:20px;float:left;min-width:50%;text-align:center">\
+					<div class="rStats"><div class="star-ratings-css"><div class="star-ratings-css-top">\
+					'
+					for(var i=0;i<outletObj.bestReview.rating;i++){
+						outletDiv = outletDiv + '<span>★</span>'
+					}
+
+					outletDiv = outletDiv + '\
+					</div><div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div></div></div>\
+					<p id="pReviewText"><i class="fa fa-quote-left" style="padding-right:10px"></i>'+ outletObj.bestReview.comment +'</p>\
 				</td>\
+				<td id="sepRev">\
+					<div class="rStats"><div class="star-ratings-css"><div class="star-ratings-css-top" style="color:red">\
+					'
+					for(var i=0;i<outletObj.worstReview.rating;i++){
+						outletDiv = outletDiv + '<span>★</span>'
+					}
+
+					outletDiv = outletDiv + '\
+					</div><div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div></div></div>\
+					 <p id="nReviewText"><i class="fa fa-quote-left" style="padding-right:10px"></i>' + outletObj.worstReview.comment + '</p>\
+				</td>\
+			</tr>\
+		</table>\
+		<table>\
+			<tbody>\
+				<tr id="resultmessage">\
+					<td style="float:left;width:100%">\
+						<div class="alert alert-success" id="succReviewPost" style="margin-left:10px;margin-right:10px;">\<b>Success</b></div>\
+						<div class="alert alert-danger" id="errReviewPost" style="margin-left:10px;margin-right:10px"><b>Error</b></div>\
+					</td>\
 				</tr>\
-					<tr id="userCommentRating" style="display:none;float:left;width:100%;padding:10px;margin:0px">\
-						<td>\
+				<tr id="userCommentRating" style="float:left;width:100%;padding:10px;margin:0px">\
+					<td>\
 						<p>Your rating : </p>\
-						</td>\
-						<td>\
+					</td>\
+					<td>\
 						<section class="rating-widget">\
-						<div class="rating-stars text-center">\
-						<ul id="stars">\
-						<li class="star" title="Poor" data-value="1">\
-						<i class="fa fa-star fa-fw"></i>\
-						</li>\
-						<li class="star" title="Fair" data-value="2"><i class="fa fa-star fa-fw"></i>\
-						</li>\
-						<li class="star" title="Good" data-value="3"><i class="fa fa-star fa-fw"></i>\
-						</li>\
-						<li class="star" title="Excellent" data-value="4"><i class="fa fa-star fa-fw"></i>\
-						</li>\
-						<li class="star" title="WOW!!!" data-value="5"><i class="fa fa-star fa-fw"></i>\
-						</li>\
-						</ul>\
-						</div>\
+							<div class="rating-stars text-center">\
+								<ul id="stars">\
+									<li class="star" title="Poor" data-value="1">\
+									<i class="fa fa-star fa-fw"></i>\
+									</li>\
+									<li class="star" title="Fair" data-value="2"><i class="fa fa-star fa-fw"></i>\
+									</li>\
+									<li class="star" title="Good" data-value="3"><i class="fa fa-star fa-fw"></i>\
+									</li>\
+									<li class="star" title="Excellent" data-value="4"><i class="fa fa-star fa-fw"></i>\
+									</li>\
+									<li class="star" title="WOW!!!" data-value="5"><i class="fa fa-star fa-fw"></i>\
+									</li>\
+								</ul>\
+							</div>\
 						</section>\
-						</td>\
-					</tr>\
-					<tr id="restaurantUtilities" style="display:none">\
-						<td style="float:left;width:80%">\
+					</td>\
+				</tr>\
+				<tr id="restaurantUtilities">\
+					<td style="float:left;width:80%">\
 						<textarea id="replyPostText" name="replyPostText" placeholder="Write reivew..." required></textarea>\
-						</td>\
-						<td style="float:right;padding:5px">\
+					</td>\
+					<td style="float:right;padding:5px">\
 						<button id="reviewPost" type="button">Post</button>\
-						</td>\
-					</tr>\
+					</td>\
+				</tr>\
       </tbody>\
     </table>\
-  </div>\
-	</div>';
+	  </div>\
+		</div>';
+
+	console.log(outletObj.worstReview.rating);
+	if(outletObj.worstReview.rating==0){
+		$(outletDiv).find('td#sepRev').attr('style', 'color:#cbcbcb');
+		console.log(outletDiv);
+	};
 
 	$(outletDiv).hide().prependTo(".restaurantLists").fadeIn("slow");
 	starRating();
 }
 
+function addReviewsDiv(res, name){
+	var reviewHeader = '<div style="position:fixed" class="reviewsDiv">\
+  <div class="sResultsMine">\
+    <div class="mineNameHeader">\
+      <div style="display:inline-flex;"></div>\
+      <p style="float:left;margin:10px;font-weight:800;font-size:15px;margin:10px">'+ name +'</p>\
+			<p style="float:right;font-weight:800;font-size:15px;margin:10px">' + res.reviewList.length + ' Reviews</p>\
+    </div><div class="reviewList">'
+
+
+	var reviewList="";
+
+	for(each in res.reviewList){
+
+		var element = res.reviewList[each];
+		var posterName = element.customerId;
+		var date = element.date;
+		var reviewId = element._id;
+		var rating = element.rating;
+		var comment = element.comment;
+		var reply = "";
+		if(element.reply)
+			reply = element.reply;
+
+		var top = '<li data-reviewId='+ reviewId +'>\
+	      <hr>\
+	      <table id="reviewTableDiv">\
+	        <tbody>\
+	          <tr id="reviewInfoDiv">\
+	            <td style="float:left;">\
+	              <p id="reviewerName">'+ posterName +'</p>\
+	              <p id="reviewDate">'+ date +'</p>\
+	            </td>\
+	            <td style="float:right;">\
+							<div class="rStats"><div class="star-ratings-css">\
+							<div class="star-ratings-css-top">';
+							//console.log(rating, typeof rating);
+							for(var i=0;i<rating;i++){
+							 top = top + '<span>★</span>';
+						 }
+
+							top  = top + '</div>\
+							<div class="star-ratings-css-bottom">\
+							<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>\
+							</div>\
+							</div>\
+							</div>\
+							<button class="i ionicons ion-android-delete" id="delete" type="button">\
+							</button></td>\
+	          </tr>\
+	          <tr id="reviewTextDiv">\
+	            <td>\
+	              <table>\
+	                <tbody>\
+	                  <tr>\
+	                    <td>\
+											<i class="fa fa-quote-left"></i>\
+	                      <p id="pReviewText"> '+ comment +'</p>\
+	                    </td>\
+	                  </tr>\
+	                </tbody>\
+	              </table>\
+	            </td>\
+	          </tr>';
+
+	          var ownerReply = '<tr class="showReplyDiv">\
+	            <td style="float:right">\
+	              <button class="showReply" id="showReplyBtn" type="button">Show Reply</button>\
+	              <p id="replyText" style="display:none"><span style="font-weight:500;font-size:15px"> Owner : ' + reply + '</p>\
+	            </td>\
+	          </tr>';
+
+					var footerPart = '</tbody>\
+	      </table>\
+	    </li>';
+			if(reply!=""){
+				reviewList = reviewList + top + ownerReply + footerPart;
+			}
+			else {
+				reviewList = reviewList + top + footerPart;
+			}
+		}
+
+	var reviewRemainder = '</div>\
+	  </div>\
+	</div>'
+
+	var finalReviewDiv = reviewHeader + reviewList + reviewRemainder;
+	if($('#mainResults').find('.reviewsDiv').length!=0)
+		$("#mainResults").find('.reviewsDiv').replaceWith(finalReviewDiv);
+	else {
+		$(finalReviewDiv).appendTo("#mainResults");
+	}
+}
+
+function getReviewsById(outletId, name){
+	$.ajax({
+		type : 'GET',
+		url : '/outlet/reviews/'+outletId,
+		statusCode : {
+			200 : function(res) {
+				addReviewsDiv(res, name);
+			},
+			400 : function(res){
+				showError(res.responseJSON.message);
+			}
+		}
+	});
+};
+
 $(document).on('click', '.sResultsMain', function() {
+	var outletId = $(this)[0].dataset.outletid;
+	getReviewsById(outletId, $(this).find('#restaurantName').text());
 	$(this).find('#userCommentRating').show();
 	$(this).find('#restaurantUtilities').show();
+	$(this).find('#restaurantExReview').show();
+	$(this).find('#resultmessage').hide();
 });
 
 function appendOutletList(data) {
@@ -397,30 +547,63 @@ function appendOutletList(data) {
 
 	for (var outlet in Outlets) {
 		var outletObj = Outlets[outlet];
+		console.log(outletObj);
+
 		var cleanObj = new Object({
 			uid: outletObj._id,
 			name: outletObj.metadata.name,
 			desc: outletObj.desc,
 			addr: outletObj.addr,
+			num_reviews : outletObj.reviews.length,
 			reviews: outletObj.reviews
 		});
 
+		var bestReview = {
+			comment : "No Positive Reviews",
+			rating : 0,
+			user : null
+		};
+		var worstReview = {
+			comment : "No Negetive Reviews",
+			rating : 6,
+			user : null
+		};
+		var avgRating = 0;
+
 		if (outletObj.reviews.length == 0) {
-			cleanObj.pExReview = "No Positive Reviews";
-			cleanObj.pExReviewR = "0";
-			cleanObj.nExReview = "No Negetive Reviews";
-			cleanObj.nExReviewR = "0";
-			cleanObj.avgRating = "0";
-		} else { //if the reviews section is not empty
-			//Need to iterate the entire reviews
-			cleanObj.pExReview = "Something Good";
-			cleanObj.pExReviewR = "5";
-			cleanObj.nExReview = "Something Bad";
-			cleanObj.nExReviewR = "3.2";
-			cleanObj.avgRating = "4.2";
+			cleanObj.bestReview = bestReview
+			cleanObj.worstReview = worstReview;
+			cleanObj.avgRating = 0;
+		} else {
+			for(var each in outletObj.reviews){
+				var elem = outletObj.reviews[each];
+				avgRating = avgRating + elem.rating;
+				if(bestReview.rating <= elem.rating){
+					bestReview.rating = elem.rating;
+					bestReview.comment = elem.comment;
+					bestReview.user = elem.customerId;
+				}
+				if(worstReview.rating >= elem.rating){
+					worstReview.rating = elem.rating;
+					worstReview.comment = elem.comment;
+					worstReview.user = elem.customerId;
+				}
+			}
+			avgRating = Math.round(avgRating/outletObj.reviews.length);
+			cleanObj.avgRating = avgRating;
+			cleanObj.bestReview = bestReview;
+			cleanObj.worstReview = worstReview;
+			if(cleanObj.worstReview.rating == 6){
+				cleanObj.worstReview.rating = 0;
+			}
+			if(cleanObj.worstReview.rating== cleanObj.bestReview.rating){
+				cleanObj.worstReview.comment = "No Negetive Reviews";
+				cleanObj.worstReview.rating = 0;
+				cleanObj.worstReview.user = null;
+			}
 		}
 		list.push(cleanObj);
-		console.log(list);
+		//console.log(cleanObj);
 		addOutletDiv(cleanObj);
 	}
 }
@@ -430,7 +613,6 @@ function getOutletList() {
 		type: 'GET',
 		url: '/outlet',
 		success: function(data) {
-			console.log(data);
 			appendOutletList(data);
 		},
 		statusCode: {
@@ -462,7 +644,6 @@ $(document).on('click', '#reviewPost', function(){
 		rating : reviewRating,
 		comment : reviewComment
 	});
-	console.log(reviewObj);
 	putReview(outletId, reviewObj, parentElem, function(err, res){
 		if(err){
 			showReviewPostError(err, parentElem);
@@ -479,7 +660,6 @@ function showReviewPostError(msg, elem){
 	$(elem).find('#succReviewPost').hide();
 	$(elem).find('#resultmessage').show();
 	$(elem).find('#replyPostText').val('');
-	console.log($(elem).find('ul#stars li.star'));
 	$(elem).find('ul#stars li.star').removeClass('selected');
 }
 
@@ -553,19 +733,15 @@ function putReview(outletId, reviewObj, parentElem, next){
 							$(parentElem).find("input[name=restAdd]").val('');
 						},
 						400: function(res) {
-							console.log(400 + "res");
 							showError(res.responseJSON.message);
 						},
 						409: function(res) {
-							console.log(409 + "res");
 							showError(res.responseJSON.message);
 						},
 						500: function(res) {
-							console.log(500 + "res");
 							showError(res.responseJSON.message);
 						},
 						401: function(res) {
-							console.log(401 + "res");
 							showError(res.responseJSON.message);
 						},
 					}
