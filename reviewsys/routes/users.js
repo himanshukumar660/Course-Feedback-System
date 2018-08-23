@@ -6,6 +6,7 @@ var router = express.Router();
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var User = require("../models/user");
+var xss = require("xss");
 
 passport.serializeUser(function(user, done) {
 	done(null, user.id);
@@ -30,10 +31,6 @@ passport.use(new LocalStrategy(
                 if(isMatch){
                     return done(null, user);
                 } else {
-										// res.send({
-										// 	responseCode : 0,
-										// 	message ; "Invalid Password"
-										// });
                     return done(null, false, {message: "Invalid Password"});
                 }
             });
@@ -41,29 +38,44 @@ passport.use(new LocalStrategy(
     }
 ));
 
-router.post("/register", ensureNotAuthenticated, function(req, res, next) {
-//	console.log(req.body);
-	var name = req.body.name;
-	var username = req.body.username;
-	var password = req.body.password;
-	var cnfpassword = req.body.cnfpassword;
-  var priority = req.body.pType;
+function ensureAuthentication(req, res, next){
+	if(!req.isAuthenticated())
+		{
+			return next();
+		}
+	else
+	{
+			res.status(401).send({
+        message : "All active sessions must be logged out"
+      });
+	}
+}
 
+router.post("/register", ensureAuthentication, function(req, res, next) {
 	// Form Validation
 	req.checkBody("name", "Name is required").notEmpty();
+	req.checkBody("username", "Username should be alphanumeric").isAlphanumeric();
 	req.checkBody("username", "Username is required").notEmpty();
 	req.checkBody("password", "Min 5 characters required").isLength({
 		min: 5
 	});
   req.checkBody("cnfpassword", "Password doesn't match").equals(req.body.password);
 
+	if(Number(req.body.pType)!=94321){
+		req.checkBody("pType", "Priority should be number between 1 and 2").isInt({min :1, max:2}, { allow_leading_zeroes: false });
+	}
+
 	// Check for errors
 	var errors = req.validationErrors();
-	console.log(errors);
+
+	var name = xss(req.body.name);
+	var username = xss(req.body.username);
+	var password = xss(req.body.password);
+	var cnfpassword = xss(req.body.cnfpassword);
+  var priority = xss(req.body.pType);
 
 	if (errors) {
-		res.send({
-      responseCode : 0,
+		res.status(400).send({
       message : "Input Validation Error",
 			errors: errors
 		});
@@ -76,49 +88,36 @@ router.post("/register", ensureNotAuthenticated, function(req, res, next) {
 			priority : priority,
 		});
 		// Create User
-		User.createUser(newUser, function(err) {
-			if (err) {
-				res.send({
-          responseCode : 0,
-          message : "Username not available",
+		User.createUser(newUser, function(err_user, res_user) {
+			if (err_user) {
+				res.status(401).send({
+          message : "Username not available"
 				});
 			}
       else {
-				res.send({
-          responseCode : 1,
+				res.status(200).send({
           message : "Account created successfully",
-          accountPreview : {
-            username : newUser.username,
-            type : newUser.priority
-        }
       })
 			}
 		});
 	}
 });
 
-// router.post("/login", [ensureNotAuthenticated, passport.authenticate("local")], function(req, res) {
-// 	res.json({
-//     responseCode : 1,
-//     message : "User successfully logged in",
-//   })
-// });
-
 router.post('/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err); }
-    if (!user) { return res.send(info); }
+    if (!user) { console.log(info); return res.status(401).send(info); }
 		else
 		{
-			User.getUserByUsername(req.body.username, function(err1, res1){
-				if(err1){
-					throw err1;
+			User.getUserByUsername(req.body.username, function(err_user, res_user){
+				if(err_user){
+					res.status(401).send({
+						message : "No user with specified details available"
+					})
 				}
 				else {
-					console.log(res1);
-					req.session.user_id = res1._id;
-					return res.json({
-				    responseCode : 1,
+					req.session.user_id = res_user._id;
+					return res.status(200).send({
 				    message : "User successfully logged in",
 				  })
 				}
@@ -131,39 +130,21 @@ router.get("/logout", function(req, res) {
 	if(req.session.user_id) {
 	    req.session.destroy(function(err) {
 	      if(err) {
-	        res.json({
-            responseCode : 0,
+	        res.send({
             message : err
           })
 	      } else {
-	        res.json({
-				      responseCode: 1,
+	        res.status(200).send({
 				      message : "Logged out"
 					});
 	      }
 	    });
 	  }
   else {
-    res.json({
-      responseCode:0,
+    res.status(401).send({
       message : "No active sessions"
     })
 	}
 });
-
-function ensureNotAuthenticated(req, res, next){
-	if(!req.isAuthenticated())
-		{
-			return next();
-		}
-	else
-	{
-			console.log("Authenticated User!");
-			res.json({
-        responseCode : 0,
-        message : "Unauthorized to view this page"
-      });
-	}
-}
 
 module.exports = router;

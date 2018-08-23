@@ -36,8 +36,10 @@ app.use(bodyParser.urlencoded({
 app.use(session({
     secret:"secret",
     saveUninitialized: false,
-    resave: true,
-    cookie:true
+    resave: false,
+    cookie: {
+        expires: 60000*60*24*7
+    }
 }));
 
 // passport
@@ -84,7 +86,7 @@ app.get("*", function(req, res, next){
 });
 
 app.use("/", routes);
-app.use("/users", users);
+app.use("/user/", users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

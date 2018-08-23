@@ -33,6 +33,7 @@ body {
 }
 #aboutUs, #address, #time{
   margin-bottom: 0px;
+  font-size: 15px;
 }
 
 #aboutUs{
@@ -42,16 +43,24 @@ body {
   float:left;
   margin:0px;
   width:100%;
+  padding-bottom: 20px;
 }
 #restaurantExReview{
   float:right;
   margin:0px;
+  padding: 0px;
+}
+#restaurantUtilities, #resultmessage{
+  width: 100%;
+  float:right;
+  margin:0px;
+  padding: 0px;
 }
 #reviewerName, #reviewDate{
   margin-bottom: 0px;
 }
 
-.showReply, #postReply{
+.showReply, #postReply, #reviewPost{
     cursor: pointer;
     margin: 5px;
     max-width: 104px;
@@ -78,6 +87,14 @@ body {
     color: #fff;
     border: none;
 }
+#showReplyBtn{
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+#restSaveBtn{
+  margin: 10px;
+  width:100%;
+}
 #logoutBtn{
   float: right;
   margin: 5px;
@@ -95,7 +112,7 @@ body {
     font-size: 40px;
     padding: 10px;
 }
-.showReply:hover, #postReply:hover{
+.showReply:hover, #postReply:hover, #reviewPost:hover{
   box-shadow: 0 1px 2px 0 rgba(26,115,232,0.451), 0 1px 3px 1px rgba(26,115,232,0.302);
   background-color: #297be6;
   border: none;
@@ -103,6 +120,10 @@ body {
 #postReply{
   margin-top: 10px;
   margin-right: 5px;
+}
+#reviewPost{
+  margin-right: 15px;
+  padding: 10px;
 }
 #delete{
   color: #eee;
@@ -123,7 +144,6 @@ body {
 
 .showReplyDiv{
   float:right;
-  float: right;
   padding: 0px;
   margin: 0px;
   width: 100%;
@@ -137,9 +157,10 @@ body {
   border-radius: 5px;
   font-weight: 500;
   border: 1px solid lightgray;
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
   padding: 5px;
+  max-width: 100%;
 }
 
 #reviewTextDiv{
@@ -166,10 +187,6 @@ body {
     width: 0px;  /* remove scrollbar space */
     background: transparent;  /* optional: just make scrollbar invisible */
 }
-/* optional: show position indicator in red */
-::-webkit-scrollbar-thumb {
-    background: #FF0000;
-}
 ul.reviewList li{
   margin-bottom: 5px;
 }
@@ -182,6 +199,7 @@ ul.reviewList li{
 }
 #sepRev{
   border-left: 1px solid #eee;
+  width: 50%;
 }
 .sResultBox table{
   width: 100%;
@@ -200,6 +218,24 @@ ul.reviewList li{
 }
 #sBar:hover, #sInpt:hover{
   box-shadow: 1px 3px 6px 0 rgba(27,42,53,.25);
+}
+button{
+  outline: none;
+}
+#restAddSave, #restDescSave, #restNameSave{
+  width: 96.5%;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  outline: none;
+  max-width: 96.5%;
+}
+#restDescSave{
+  height:80px;
+}
+.restSaveDiv{
+  display: none;
 }
 #sBar{
   width: 584px;
@@ -288,11 +324,18 @@ ul.reviewList li{
   border: 1px solid lightgray;
   line-height: 2;
 }
+.sResultsMain{
+  transition: all 0.2s ease-in-out;
+}
+.sResultsMain:hover{
+  box-shadow: 0 10px 35px 0 #eee;
+}
 .choiceLst{
   padding-left:0px;
   display:inline-block;
   text-align:center;
 }
+
 #choices:hover{
   background-color: lightgrey;
 }
@@ -341,8 +384,7 @@ table tr {
   padding-top: 5px;
   padding-right: 10px;
   padding-bottom: 5px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-radius: 8px;
   display:inline-block;
   width:100%;
   background-color: #f6f8fa;
@@ -483,7 +525,7 @@ table tr {
 	width:40%;
 }
 #restaurantName{
-	font-size:25px;
+	font-size:20px;
   padding-left: 5px;
   padding-top: 5px;
 	font-weight: 500;
@@ -531,6 +573,7 @@ img#sImgHeader{
   background-color: white;
   border-radius: 8px;
 }
+
 .mineInfoHeader{
   display: flex;
   width: 100%;
@@ -644,11 +687,17 @@ hr{
 #regSucc, #err{
   display: none;
 }
-#regSucc{
+#errReviewPost, #succReviewPost{
+  display: none;
+}
+#regSucc, #succReviewPost{
   color: green;
 }
-#err{
+#err, #errReviewPost{
   color: red;
+}
+#resultmessage{
+  display: none;
 }
 #close_error{
   float: right;
@@ -750,16 +799,9 @@ font-size:12px;
   width: 40%;
 }
 #fScore{
-  color: #fff;
-  font-weight: 500;
-  background-color: #28a745;
-  background-image: linear-gradient(-180deg, #34d058 0%, #28a745 90%);
-  padding: 3px 10px;
-  line-height: 20px;
-  border: 1px solid white;
-  border-radius: 8px;
-  font-size: 13px;
+  font-size: 12.5px;
 }
+
 #fInd{
   font-size: 15px;
   padding-top: 3px;
@@ -974,4 +1016,34 @@ position:absolute;
 	.rDetails{
 		font-size:13px;
 	}
+}
+
+
+/* Rating Star Widgets Style */
+.rating-stars ul {
+  list-style-type:none;
+  padding:0;
+
+  -moz-user-select:none;
+  -webkit-user-select:none;
+}
+.rating-stars ul > li.star {
+  display:inline-block;
+
+}
+
+/* Idle State of the stars */
+.rating-stars ul > li.star > i.fa {
+  font-size:20px; /* Change the size of the stars */
+  color:#ccc; /* Color on idle state */
+}
+
+/* Hover state of the stars */
+.rating-stars ul > li.star.hover > i.fa {
+  color:#FFCC36;
+}
+
+/* Selected state of the stars */
+.rating-stars ul > li.star.selected > i.fa {
+  color:#FF912C;
 }

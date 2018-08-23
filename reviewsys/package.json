@@ -27,7 +27,8 @@
     "randomstring": "*",
     "request": "*",
     "short-mongo-id": "*",
-    "validator": "*"
+    "validator": "*",
+    "xss": "*"
   },
   "author": "Himanshu Kumar"
 }

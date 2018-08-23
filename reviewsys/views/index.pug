@@ -22,9 +22,8 @@ block content
 						input(type='password', name="password", placeholder="Password")
 						input(type='password', name="cnfpassword", placeholder="Confirm Password")
 						select#typeSelect(name="pType")
-							option(value='0', selected='selected') User
-							option(value='1') Owner
-							option(value='2') Admin
+							option(value='1', selected='selected') User
+							option(value='2') Owner
 						div(style="text-align:center;padding:15px;")
 							button.showReply(id="registerBtn" type="submit" name="submit") Register
 						.modal-footer
@@ -34,7 +33,7 @@ block content
 									span#logInLink LogIn 
 
 					#inputLoginFeilds
-						input(type='text', name="username", placeholder="Username" )
+						input(type='text', name="username", placeholder="Username" autocomplete="off")
 						input(type='password', name="password", placeholder="Password")
 						div(style="text-align:center;padding:15px")
 							button.showReply(id="logInBtn" type="submit" name="submit") LogIn
@@ -64,37 +63,24 @@ block content
 						div(style="text-align:center;padding:15px")
 							button.showReply#logoutBtn Logout
 						
-					.jumbotron.text-center.mMines(style='display:none')
-						#mMines
-							#mClose
-								i.ionicons.ion-close-circled
-							#mNum
-								p Results per mine 
-								input(name='mSearchNum', type='number', placeholder='10', autocomplete='off')
-							hr
-							#mNeighboursList
-							hr
-							#mMineList
-							hr
-							.sInptBtn
-								button#sInptBtn(type='submit') Search All
+				
 					div
 						.rTool
 							div(style='display:inline-flex')
 								p.rToolBtns.rToolBtnActive.showAll Restaurants
 								p.rToolBtns.fMines Users
-								
-							div(style='display:inline-flex')
-								p.rToolBtns.mSearch Add
 		
 		#mainResults
 			.sResults
 				#recentSearch
 					#rLog
+						button.showReply#restSaveShowBtn(type="button") 
+							i.fa.fa-plus(style="padding-right:5px;")
+							| Add
 						#numberResults
 						div
 							.dropdown
-								button#fScore.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='false')
+								button#fScore.showReply.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='false')
 									| Filter&nbsp&nbsp 
 									i.ionicons.ion-funnel(title='Filter')
 								ul.dropdown-menu(role='menu', aria-labelledby='menu1')
@@ -120,7 +106,15 @@ block content
 											i#removeFilterBtn.ionicons.ion-close-round
 											p
 												| Remove Filter
-			
+					
+					.alert.alert-success#regSucc
+						b Success
+						.glyphicon.glyphicon-remove#close_error
+		
+					.alert.alert-danger#err
+						b Error
+						.glyphicon.glyphicon-remove#close_error
+					
 					#loader_divFilter
 						.loader
 							.line
@@ -128,116 +122,98 @@ block content
 							.line
 							.line
 					
-					.sResultsMain
+					.sResultsMain.restSaveDiv
 						.sResultBox
-							table
-								tbody
-									tr#restaurantInfo
-										td
-											div#restaurantHeading
-												p#restaurantName Raku 
-												button.i.ionicons.ion-android-delete#delete(type="button")
-											hr
-											#details
-												p#aboutUs Cozy room packs foodies for creative Japanese small plates, plus a bustling late-night scene.
-												p#address Las Vegas, NV, US
-												p#time 10:00AM - 3:00AM
-										td#restaurantBigRating 
-											p 4.2
-											.rStats
-												.star-ratings-css
-													.star-ratings-css-top
-														span ★
-														span ★
-														span ★
-														span ★
-														span ★
-													.star-ratings-css-bottom
-														span ★
-														span ★
-														span ★
-														span ★
-														span ★
-									tr#restaurantExReview
-										td
-											hr
-											table
-												tr
-													td
-														table
-															tr
-																td 
-																	i.fa.fa-thumbs-up#pReviewLogo
-																	p 4.2
-																td
-																	p#pReviewText  Fans of the book as well as uninitiated moviegoers looking for a thought-provoking character piece will find  plenty to enjoy and ponder in Boone's latest film
-													td#sepRev
-														table
-															tr
-																td 
-																	i.fa.fa-thumbs-down#nReviewLogo
-																	p 1.2
-																td
-																	p#nReviewText  Fans of the book as well as uninitiated moviegoers looking for a thought-provoking character piece will find  plenty to enjoy and ponder in Boone's latest film
+							#restaurantSaveInfo
+								input(type="text" name="restName" placeholder="Restaurant Name" autcomplete="off" id="restNameSave" required)
+								textarea(id="restDescSave" name="restDesc" placeholder="Restaurant Description..." required )
+								input(type="text" name="restAdd" placeholder="Restaurant Address" autcomplete="off" id="restAddSave" required)
+								div(style="text-align:right;width:100%")
+									button#restSaveBtn.showReply(type="button") Save
 					
-					.sResultsMain
-						.sResultBox
-							table
-								tbody
-									tr#restaurantInfo
-										td
-											p#restaurantName Raku
-											hr
-											#details
-												p#aboutUs Cozy room packs foodies for creative Japanese small plates, plus a bustling late-night scene.
-												p#address Las Vegas, NV, US
-												p#time 10:00AM - 3:00AM
-										td#restaurantBigRating 
-											p 4.2
-											.rStats
-												.star-ratings-css
-													.star-ratings-css-top
-														span ★
-														span ★
-														span ★
-														span ★
-														span ★
-													.star-ratings-css-bottom
-														span ★
-														span ★
-														span ★
-														span ★
-														span ★
-									tr#restaurantExReview
-										td
-											hr
-											table
-												tr
-													td
-														table
-															tr
-																td 
-																	i.fa.fa-thumbs-up#pReviewLogo
-																	p 4.2
-																td
-																	p#pReviewText  Fans of the book as well as uninitiated moviegoers looking for a thought-provoking character piece will find  plenty to enjoy and ponder in Boone's latest film
-													td#sepRev
-														table
-															tr
-																td 
-																	i.fa.fa-thumbs-down#nReviewLogo
-																	p 1.2
-																td
-																	p#nReviewText  Fans of the book as well as uninitiated moviegoers looking for a thought-provoking character piece will find  plenty to enjoy and ponder in Boone's latest film
-				
+					.restaurantLists
+						.sResultsMain
+							.sResultBox
+								table
+									tbody
+										tr#restaurantInfo
+											td
+												div#restaurantHeading
+													p#restaurantName Raku 
+													button.i.ionicons.ion-android-delete#delete(type="button")
+												hr
+												#details
+													p#aboutUs Cozy room packs foodies for creative Japanese small plates, plus a bustling late-night scene.
+													p#address Las Vegas, NV, US
+											td#restaurantBigRating 
+												p 4.2
+												.rStats
+													.star-ratings-css
+														.star-ratings-css-top
+															span ★
+															span ★
+															span ★
+															span ★
+															span ★
+														.star-ratings-css-bottom
+															span ★
+															span ★
+															span ★
+															span ★
+															span ★
+												p(style="font-size:10px;margin:0px;padding:0px") (Avg. Rating)
+						
+										tr#restaurantExReview
+											td
+												hr
+												table
+													tr
+														td
+															table
+																tr
+																	td 
+																		i.fa.fa-thumbs-up#pReviewLogo
+																		p 4.2
+																	td
+																		p#pReviewText  Fans of the book as well as uninitiated moviegoers looking for a thought-provoking character.
+														td#sepRev
+															table
+																tr
+																	td 
+																		i.fa.fa-thumbs-down#nReviewLogo
+																		p 1.2
+																	td
+																		p#nReviewText  Fans of the book as well as uninitiated.
+										tr(style="float:left;width:100%;padding:10px;margin:0px")
+											td
+												p Your rating : 
+											td
+												section.rating-widget
+													.rating-stars.text-center
+														ul#stars
+															li.star(title='Poor', data-value='1')
+																i.fa.fa-star.fa-fw
+															li.star(title='Fair', data-value='2')
+																i.fa.fa-star.fa-fw
+															li.star(title='Good', data-value='3')
+																i.fa.fa-star.fa-fw
+															li.star(title='Excellent', data-value='4')
+																i.fa.fa-star.fa-fw
+															li.star(title='WOW!!!', data-value='5')
+																i.fa.fa-star.fa-fw
+						
+										tr#restaurantUtilities
+											td(style="float:left;width:80%")
+												textarea(id="replyPostText" name="replyPostText" placeholder="Write reivew..." required )
+											td(style="float:right;padding:5px")    
+												button#reviewPost(type="button") Post
+										
 						
 			div(style='position:fixed')
 				.sResultsMine
 					.mineNameHeader
 						div(style="display:inline-flex;")
 						p(style='float:left;margin:10px;font-weight:800;font-size:15px') Raku Reviews
-						#writeReview(style="float:right")
-							i.fa.fa-pencil#writeReviewBtn(data-toggle='tooltip', title='Save')
 					.reviewList
 							li
 								table#reviewTableDiv
@@ -257,75 +233,8 @@ block content
 															p 4.2
 														td
 															p#pReviewText  Fans of the book as well as uninitiated moviegoers looking for a thought-provoking character piece will find  plenty to enjoy and ponder in Boone's latest film Fans of the book as well as uninitiated moviegoers looking
-										
+										hr
 										tr.showReplyDiv
-											-var replied = false
-											if !replied
-												td(style="float:left;width:80%")
-													textarea(id="replyPostText" name="replyPostText" placeholder="Write your regards..." required )
-												td(style="float:right;")    
-													button#postReply(type="button") Post
-														
-											if replied  
-												td(style="float:right")
-													button.showReply(type="button") Show Reply
-													p#replyText(style="display:none")
-														span(style="font-weight:800;font-style:italic;font-size:15px") Owner Says 
-														| : Fans of the book as well as uninitiated moviegoers looking for a thought-provoking character piece will find  plenty to enjoy and ponder in Boone's latest film
-							
-							li
-								table#reviewTableDiv
-									tbody
-										tr#reviewInfoDiv
-											td(style="float:left;")
-													p#reviewerName Himanshu Kumar
-													p#reviewDate 02 Aug 2018
-											td(style="float:right;")
-													button.i.ionicons.ion-android-delete#delete(type="button")
-										tr#reviewTextDiv
-											td
-												table
-													tr
-														td 
-															i.fa.fa-thumbs-up#pReviewLogo
-															p 4.2
-														td
-															p#pReviewText  Fans of the book as well as uninitiated moviegoers looking for a thought-provoking character piece will find  plenty to enjoy and ponder in Boone's latest film Fans of the book as well as uninitiated moviegoers looking
-										
-										tr.showReplyDiv
-											-var replied = false
-											if !replied
-												td(style="float:left;width:80%")
-													textarea(id="replyPostText" name="replyPostText" placeholder="Write your regards..." required )
-												td(style="float:right;")    
-													button#postReply(type="button") Post
-														
-											if replied  
-												td(style="float:right")
-													button.showReply(type="button") Show Reply
-													p#replyText(style="display:none")
-														span(style="font-weight:800;font-style:italic;font-size:15px") Owner Says 
-														| : Fans of the book as well as uninitiated moviegoers looking for a thought-provoking character piece will find  plenty to enjoy and ponder in Boone's latest film					
-							li
-								table#reviewTableDiv
-									tbody
-										tr#reviewInfoDiv
-											td(style="float:left;")
-													p#reviewerName Himanshu Kumar
-													p#reviewDate 02 Aug 2018
-											td(style="float:right;")
-													button.i.ionicons.ion-android-delete#delete(type="button")
-										tr#reviewTextDiv
-											td
-												table
-													tr
-														td 
-															i.fa.fa-thumbs-up#pReviewLogo
-															p 4.2
-														td
-															p#pReviewText  Fans of the book as well as uninitiated moviegoers looking for a thought-provoking character piece will find  plenty to enjoy and ponder in Boone's latest film Fans of the book as well as uninitiated moviegoers looking
-										
-										tr#showReplydiv
 											-var replied = true
 											if !replied
 												td(style="float:left;width:80%")
@@ -335,10 +244,11 @@ block content
 														
 											if replied  
 												td(style="float:right")
-													button.showReply(type="button") Show Reply
+													button.showReply#showReplyBtn(type="button") Show Reply
 													p#replyText(style="display:none")
 														span(style="font-weight:800;font-style:italic;font-size:15px") Owner Says 
 														| : Fans of the book as well as uninitiated moviegoers looking for a thought-provoking character piece will find  plenty to enjoy and ponder in Boone's latest film
+							
 															
 		
 				block content			
@@ -346,6 +256,7 @@ block content
 	script(src='javascripts/review.js')
 	if authenticated
 		script.
-			console.log("Himanshu");
 			document.getElementsByClassName("indexPage")[0].style.display = "block";
-	
+		
+		script.
+			getOutletList();
