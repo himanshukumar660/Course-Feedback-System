@@ -59,10 +59,7 @@ module.exports.getUsers = function(callback) {
 };
 
 module.exports.getUserById = function(id, callback) {
-	var query = {
-		_id: id
-	};
-	User.findOne(query, callback);
+	User.findOne({_id : id}).exec(callback);
 };
 
 module.exports.deleteUserById = function(user_id, callback){

@@ -12,7 +12,10 @@ var db = mongoose.connection;
 var Schema = mongoose.Schema;
 
 var reviewSchema = new Schema({
-		customerId : {
+		customerUserName : {
+			type : String
+		},
+		customerName : {
 			type : String
 		},
 		rating: {
@@ -22,7 +25,8 @@ var reviewSchema = new Schema({
 			type : String
 		},
 		reply:{
-			type : String
+			type : String,
+			default : ""
 		},
 		date : {
 			type : Date,
@@ -109,7 +113,8 @@ module.exports.addReviewByOrgId = function(orgId, reviewObj, callback){
 	// 	comment : reviewObj.comment
 	// });
 	var myObj = new Review({
-		customerId : reviewObj.customerId,
+		customerUserName : reviewObj.customerUserName,
+		customerName : reviewObj.customerName,
 		rating : reviewObj.rating,
 		comment : reviewObj.comment
 	});
@@ -121,12 +126,14 @@ module.exports.addReviewByOrgId = function(orgId, reviewObj, callback){
 	);
 }
 
-module.exports.replyReviewById = function(reviewId, orgId, callback){
-	Org.update({
-		$and : [{_id : orgId}, {"reviews._id" : reviewId}]
-	}, {
+module.exports.replyReviewById = function(reviewId, orgId, reply, callback){
+	Org.updateOne({
+		_id : orgId,
+		reviews : {$elemMatch : {_id : reviewId, reply : ""}}
+	},
+	{
 		$set : {
-			"reviews.$.reply" : "Hello This is my comment"
+			"reviews.$.reply" : reply
 		}
 	}).exec(callback);
 };
@@ -161,4 +168,10 @@ module.exports.getToReplyReviews = function(outletId, username, callback){
 		_id : outletId,
 		"metadata.owner" : username
 	}, {reviews : 1, _id : 0}, callback);
+}
+
+module.exports.getOrgById = function(outletId, callback){
+	Org.findOne({
+		_id : outletId
+	}, callback);
 }

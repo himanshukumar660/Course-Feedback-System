@@ -2,7 +2,7 @@ body {
   font: 15px "QuickSand", Helvetica, Arial, sans-serif;
   font-weight: 400;
   color:black;
-  text-shadow: 0px 1px 0 #eee;
+  text-shadow: 0px 1px 0 #ddd;
 }
 ::placeholder{
   font-weight: 400;
@@ -46,17 +46,25 @@ body {
   margin:0px;
   width:100%;
   padding-bottom: 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ddd;
 }
 #restaurantExReview{
   float:right;
   margin:0px;
   padding: 0px;
+  margin-bottom: 10px;
   width:100%;
+}
+#userCommentRating{
+  float:left;
+  width:100%;
+  padding:10px;
+  margin:0px;
   display: none;
 }
 
 #restaurantUtilities, #resultmessage{
+  display: none;
   width: 100%;
   float:right;
   margin:0px;
@@ -64,6 +72,8 @@ body {
 }
 #reviewerName, #reviewDate{
   margin-bottom: 0px;
+  color: gray;
+  font-size: 13px;
 }
 
 .showReply, #postReply, #reviewPost{
@@ -132,15 +142,15 @@ body {
   margin-right: 15px;
   padding: 10px;
 }
-#delete{
-  color: #eee;
+#deleteOutlet, #deleteReview{
+  color: #ddd;
   background-color: unset;
   border: none;
   font-size: 25px;
   margin-bottom: 2px;
 
 }
-#delete:hover{
+#deleteOutlet:hover, #deleteReview:hover{
   color: red;
   border: none;
 }
@@ -176,11 +186,11 @@ body {
   padding-left:10px;
   padding-right: 10px;
   margin:5px;
-  width:100%;
+  width:99%;
   background-color : white;
 }
 #reviewTableDiv{
-  border:1px solid #eee;
+  border:1px solid #ddd;
   width:100%;
 }
 .reviewList{
@@ -206,7 +216,7 @@ ul.reviewList li{
 #reviewInfoDiv{
   width:100%;
   float:left;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ddd;
   color : black;
   font-size: 12px;
   font-weight: 500;
@@ -214,11 +224,16 @@ ul.reviewList li{
   background-color: #eff7ff;
 }
 #sepRev{
-  border-left: 1px solid #eee;
+  border-left: 1px solid #ddd;
   min-width: 50%;
   float: right;
   padding-left: 20px;
   text-align: center;
+}
+#num_reviews{
+  font-size:10px;
+  margin:0px;
+  padding:0px;
 }
 .sResultBox table{
   width: 100%;
@@ -245,7 +260,7 @@ button{
   width: 96.5%;
   padding: 10px;
   margin: 10px;
-  border: 1px solid #eee;
+  border: 1px solid #ddd;
   border-radius: 8px;
   outline: none;
   max-width: 96.5%;
@@ -255,6 +270,8 @@ button{
 }
 .restSaveDiv{
   display: none;
+  border-radius: 8px;
+  border: 1px solid #ddd;
 }
 #sBar{
   width: 584px;
@@ -347,7 +364,7 @@ button{
   transition: all 0.2s ease-in-out;
 }
 .sResultsMain:hover{
-  box-shadow: 0 10px 35px 0 #eee;
+  box-shadow: 0 10px 35px 0 #ddd;
 }
 .choiceLst{
   padding-left:0px;
@@ -476,14 +493,14 @@ table tr {
 }
 .star-ratings-css {
   unicode-bidi: bidi-override;
-  color: #eee;
+  color: #ddd;
   font-size: 20px;
   height: 20px;
   width: 100px;
   margin: 0 auto;
   position: relative;
   padding-left: 2px;
-  text-shadow: 0px 1px 0 #eee;
+  text-shadow: 0px 1px 0 #ddd;
   transform: scale(0.9);
 }
 
@@ -616,6 +633,12 @@ img#sImgHeader{
   line-height:18px;
   width:100%;
 }
+#reviewLength {
+  float:right;
+  font-weight:800;
+  font-size:15px;
+  margin:10px;
+}
 #pReviewText, #nReviewText, #replyText{
   font-size: 15px;
   padding: 10px;
@@ -623,7 +646,17 @@ img#sImgHeader{
   padding-bottom: 0px;
   margin-bottom: 0px;
 }
-
+#outletname{
+  float:left;
+  margin:10px;
+  font-weight:800;
+  font-size:15px;
+  margin:10px;
+}
+#replyText{
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
 #pReviewText{
   min-width: 100%;
 }
@@ -632,7 +665,7 @@ img#sImgHeader{
   width:10%;
   padding-top:5%;
 }
-td#restaurantBigRating p{
+td#restaurantBigRating p#avgRating{
   font-size:50px
 }
 .rStats{
@@ -700,7 +733,7 @@ hr{
   height: 39px;
   width:100%;
   outline: none;
-  border-color: #eee;
+  border-color: #ddd;
 }
 .options p{
   font-size: 15px;
@@ -840,7 +873,7 @@ font-size:12px;
 .dropdown-menu{
   z-index: 1;
   font-size: 13px;
-  min-width: 155px;
+  min-width: 195px;
   left: -113%;
   box-shadow: 0px 10px 40px 4px lightgrey;
 }

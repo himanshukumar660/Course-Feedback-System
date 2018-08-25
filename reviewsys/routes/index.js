@@ -14,6 +14,26 @@ function ensureAuthentication(req, res, next){
   }
 };
 
+function getUserInfo(req, res, next){
+  User.getUserById(req.session.user_id, function(err_user, res_user){
+    console.log(req.session.user_id);
+    if(err_user){
+      res.status(400).send({
+        message: "Unable to get user information"
+      });
+    }
+    else{
+      var result = {
+        name : res_user.name,
+        _id : res_user._id,
+        username : res_user.useranme,
+        priority : res_user.priority
+      };
+      return  next(result, req, res, next);
+    }
+  });
+};
+
 function checkOwnerPriority(req, res, next){
   User.getUserById(req.session.user_id, function(err_user, res_user){
     if(err_user){
@@ -199,7 +219,7 @@ function checkNotOwner(req, res, next){
     }
     else{
       if(res_user.priority==1){
-        return next(res_user.username, req, res, next);
+        return next(res_user, req, res, next);
       }
       else{
         res.status(400).send({
@@ -216,8 +236,26 @@ router.get('/', function(req, res, next) {
     res.render('index', { authenticated: false });
   }
   else {
-    res.render('index', { authenticated: true });
+    User.getUserById(req.session.user_id, function(err_user, res_user){
+      if(err_user){
+        console.log("Unable to get User Information");
+        res.render('index', { authenticated: false });
+      }
+      else{
+        console.log(res_user);
+        res.render('index', {
+          authenticated: true,
+          details : res_user
+        });
+      }
+    });
   }
+});
+
+router.get('/userInfo', [ensureAuthentication, getUserInfo], function(result, req, res, next){
+  res.status(200).send({
+    details : result
+  });
 });
 
 router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(username, req, res, next){
@@ -258,8 +296,10 @@ router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(user
         })
       }
       else {
+        console.log(res_org);
         return res.status(200).send({
-          message : "Restaurant added to database successfully"
+          message : "Restaurant added to database successfully",
+          details : res_org
         });
       }
     });
@@ -280,8 +320,22 @@ router.get('/outlet', ensureAuthentication, function(req, res, next){
     });
 });
 
+router.get('/outlet/outletId/:outletId', ensureAuthentication, function(req, res, next){
+    Org.getOrgById(req.params.outletId, function(org_err, org_res){
+      if(org_err){
+        res.status(400).send({
+          message : "Could'nt fetch Outlet thorugh its Id"
+        })
+      }
+      else{
+        res.status(200).send({
+          list : org_res
+        });
+      }
+    });
+});
+
 router.get('/outlet/reviews/:outletId', ensureAuthentication, function(req, res, next){
-  console.log("Hi");
   Org.getReviewsById(req.params.outletId, function(err_org, res_org){
     if(err_org){
       res.status(400).send({
@@ -331,20 +385,37 @@ router.get('/outlet/:userId', [ensureAuthentication, getUsernameById], function(
     });
 });
 
-router.put('/outlet/review/:outletId', [ensureAuthentication, checkNotOwner], function(username, req, res, next){
+router.get('/users/', [ensureAuthentication, checkAdminPriority], function(req, res, next){
+  User.getUsers(function(user_err, user_res){
+    if(user_err)
+    {
+      res.status(400).send({
+        message : user_err
+      })
+    }
+    else{
+      res.status(200).send({
+        list : user_res
+      })
+    }
+  });
+});
+
+router.put('/outlet/review/:outletId', [ensureAuthentication, checkNotOwner], function(user_details, req, res, next){
+
+  console.log(user_details);
   var outletId = req.params.outletId;
+  console.log(outletId);
 
-
-  req.checkBody("rating").notEmpty();
-  req.checkBody("rating").isInt();
-  req.checkBody("comment").notEmpty();
+  req.checkBody("rating", "Rate with at least 1 star").isInt({min : 1, max : 5});
+  req.checkBody("comment", "Empty reviews are considered invalid").notEmpty();
 
   // Check for errors
   var errors = req.validationErrors();
 
   if (errors) {
     return res.status(400).send({
-      message : "Input validation error",
+      message : "All the input feilds are required",
       errors: errors
     });
   }
@@ -353,10 +424,13 @@ router.put('/outlet/review/:outletId', [ensureAuthentication, checkNotOwner], fu
   var sRating = Number(xss(req.body.rating));
 
   var reviewObj = {
-    customerId : username,
+    customerUserName :user_details.username,
+    customerName : user_details.name,
     rating : sRating,
     comment : sComment
   };
+
+  console.log(reviewObj);
 
   Org.addReviewByOrgId(outletId, reviewObj, function(err_org, res_org){
     if(err_org){
@@ -376,8 +450,9 @@ router.put('/outlet/reply/:outletId/:reviewId', [ensureAuthentication, checkOwne
 
     var reviewId = xss(req.params.reviewId);
     var outletId = xss(req.params.outletId);
+    var reply = xss(req.body.reply);
 
-    Org.replyReviewById(reviewId, outletId, function(err_org, res_org){
+    Org.replyReviewById(reviewId, outletId, reply, function(err_org, res_org){
       if(err_org){
         return res.status(400).send({
           message : err_org
@@ -423,22 +498,6 @@ router.delete('/outlet/review/:outletId/:reviewId', [ensureAuthentication, check
         });
       }
     });
-});
-
-router.get('/users/', [ensureAuthentication, checkAdminPriority], function(req, res, next){
-  User.getUsers(function(user_err, user_res){
-    if(user_err)
-    {
-      res.status(400).send({
-        message : user_err
-      })
-    }
-    else{
-      res.status(200).send({
-        list : user_res
-      })
-    }
-  });
 });
 
 router.delete('/users/:userId', [ensureAuthentication, checkAdminPriority, checkNotAdminUserId, checkUserExistenceById, getUsernameById, deleteOrgById], function(username, req, res, next){
