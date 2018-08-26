@@ -163,7 +163,7 @@ function getUsernameById(req, res, next){
   })
 }
 
-function getUseranme(req, res, next){
+function getUsername(req, res, next){
   User.getUserById(req.session.user_id, function(err_user, res_user){
     if(err_user){
       res.status(400).send({
@@ -230,34 +230,6 @@ function checkNotOwner(req, res, next){
   })
 }
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  if(!req.session.user_id){
-    res.render('index', { authenticated: false });
-  }
-  else {
-    User.getUserById(req.session.user_id, function(err_user, res_user){
-      if(err_user){
-        console.log("Unable to get User Information");
-        res.render('index', { authenticated: false });
-      }
-      else{
-        console.log(res_user);
-        res.render('index', {
-          authenticated: true,
-          details : res_user
-        });
-      }
-    });
-  }
-});
-
-router.get('/userInfo', [ensureAuthentication, getUserInfo], function(result, req, res, next){
-  res.status(200).send({
-    details : result
-  });
-});
-
 router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(username, req, res, next){
     var sName, sDesc, sAddr, sOwner;
 
@@ -303,6 +275,33 @@ router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(user
         });
       }
     });
+});
+
+router.get('/', function(req, res, next) {
+  if(!req.session.user_id){
+    res.render('index', { authenticated: false });
+  }
+  else {
+    User.getUserById(req.session.user_id, function(err_user, res_user){
+      if(err_user){
+        console.log("Unable to get User Information");
+        res.render('index', { authenticated: false });
+      }
+      else{
+        console.log(res_user);
+        res.render('index', {
+          authenticated: true,
+          details : res_user
+        });
+      }
+    });
+  }
+});
+
+router.get('/userInfo', [ensureAuthentication, getUserInfo], function(result, req, res, next){
+  res.status(200).send({
+    details : result
+  });
 });
 
 router.get('/outlet', ensureAuthentication, function(req, res, next){
@@ -401,6 +400,44 @@ router.get('/users/', [ensureAuthentication, checkAdminPriority], function(req, 
   });
 });
 
+router.get('/outlet/regex/:pattern', ensureAuthentication, function(req, res, next){
+  var pattern = xss(req.params.pattern);
+
+  Org.regexSearch(pattern, function(err_org, res_org){
+    if(err_org){
+      res.status(400).send({
+        message : "Unable to Regex search"
+      })
+    }
+    else{
+      console.log(res_org);
+      res.status(200).send({
+        list : res_org
+      });
+    }
+  })
+});
+
+router.get('/outlet/regex/user/:pattern', [ensureAuthentication,getUsername], function(username, req, res, next){
+  var pattern = xss(req.params.pattern);
+  var username = username;
+
+  Org.regexSearchById(username, pattern, function(err_org, res_org){
+    if(err_org){
+      console.log(err_org);
+      res.status(400).send({
+        message : "Unable to Regex search"
+      })
+    }
+    else{
+      console.log(res_org);
+      res.status(200).send({
+        list : res_org
+      });
+    }
+  })
+});
+
 router.put('/outlet/review/:outletId', [ensureAuthentication, checkNotOwner], function(user_details, req, res, next){
 
   console.log(user_details);
@@ -452,6 +489,7 @@ router.put('/outlet/reply/:outletId/:reviewId', [ensureAuthentication, checkOwne
     var outletId = xss(req.params.outletId);
     var reply = xss(req.body.reply);
 
+    console.log(reviewId, outletId, reply);
     Org.replyReviewById(reviewId, outletId, reply, function(err_org, res_org){
       if(err_org){
         return res.status(400).send({
@@ -459,12 +497,38 @@ router.put('/outlet/reply/:outletId/:reviewId', [ensureAuthentication, checkOwne
         });
       }
       else{
+        console.log(res_org);
         res.status(200).send({
           message : "Successfully replied to review"
         });
       }
     });
 })
+
+router.put('/users/change/:priority/:userId', [ensureAuthentication, checkAdminPriority, checkUserExistenceById], function(req, res, next){
+  var priority = xss(req.params.priority);
+  var userId = xss(req.params.userId);
+
+  if(priority!=1 && priority!=2 && priority!=94321){
+    res.status(400).send({
+      message : "Priority does'nt exist"
+    })
+  }
+  else{
+    User.convert(userId, priority, function(err_user, res_user){
+      if(err_user){
+        res.status(400).send({
+          message : "Unable to change user priority"
+        });
+      }
+      else{
+        res.status(200).send({
+          message : "User priority successfully changed"
+        });
+      }
+    })
+  }
+});
 
 router.delete('/outlet/:outletId', [ensureAuthentication, checkOwnerAdminPriority, checkOrgExistence], function(req, res, next){
     Org.deleteOrgById(req.params.outletId, function(org_err, org_res){

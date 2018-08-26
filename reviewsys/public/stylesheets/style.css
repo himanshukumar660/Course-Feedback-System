@@ -143,16 +143,19 @@ body {
   padding: 10px;
 }
 #deleteOutlet, #deleteReview{
-  color: #ddd;
-  background-color: unset;
-  border: none;
-  font-size: 25px;
-  margin-bottom: 2px;
-
+  font-size: 12px;
+  padding: 0px;
+  margin-left: 10px;
+  font-weight: bold;
+  color: white;
+  background-color: red;
+  height: 25px;
+  min-width: 45px;
 }
-#deleteOutlet:hover, #deleteReview:hover{
-  color: red;
+
+#deleteOutlet:hover,#deleteReview:hover{
   border: none;
+  box-shadow: 0px 0px 10px red;
 }
 
 #restaurantHeading{
@@ -362,6 +365,7 @@ button{
 }
 .sResultsMain{
   transition: all 0.2s ease-in-out;
+  border-radius: 8px;
 }
 .sResultsMain:hover{
   box-shadow: 0 10px 35px 0 #ddd;
@@ -734,6 +738,7 @@ hr{
   width:100%;
   outline: none;
   border-color: #ddd;
+  display: none;
 }
 .options p{
   font-size: 15px;

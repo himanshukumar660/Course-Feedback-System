@@ -71,3 +71,14 @@ module.exports.isPresent = function(userId, callback){
 		_id : userId
 	}, callback);
 }
+
+module.exports.convert = function(userId, priority, callback){
+	User.update({
+		_id : userId
+	},
+	{
+		$set : {
+			priority : priority
+		}
+	}).exec(callback);
+}

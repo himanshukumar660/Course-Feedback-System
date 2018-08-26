@@ -1,9 +1,28 @@
 var pType ;
+var UserId = "";
 
 function transitForms(elem) {
 	$(elem).closest('.card-body').find('#err').hide();
 	$(elem).closest('.card-body').find('#regSucc').hide();
 }
+
+$('#inputLoginFeilds').keyup(function(event){
+	if(event.keyCode == 13){
+		$(document).find('#logInBtn').click();
+	}
+});
+
+$('#sBar').keyup(function(event){
+	if(event.keyCode == 13){
+		$(document).find('#sBtn').click();
+	}
+});
+
+$('#inputRegisterFeilds').keyup(function(event){
+	if(event.keyCode == 13){
+		$('#registerBtn').click();
+	}
+})
 
 $(document).on('click', '#close_error', function() {
 	$(this).parent().hide();
@@ -31,13 +50,14 @@ $(document).on('click', '#showReplyBtn', function(){
 $(document).on('click', '.sResultsMain', function() {
 	var outletId = $(this)[0].dataset.outletid;
 	getReviewsById(outletId, $(this).find('#restaurantName').text());
+	$('.mineNameHeader').attr('data-outletid', outletId);
 	$(this).find('#userCommentRating').show();
 	$(this).find('#restaurantUtilities').show();
 	$(this).find('#restaurantExReview').show();
 	$(this).find('#resultmessage').hide();
 });
 
-$(document).on('click', '#reviewPost', function(){
+$(document).on('click', 'td #reviewPost', function(){
 	var parentElem = $(this).closest('.sResultsMain');
 
 	var outletId = $(parentElem)[0].dataset.outletid;
@@ -61,10 +81,6 @@ $(document).on('click', '#reviewPost', function(){
 
 $(document).on('click', '#deleteOutlet', function(){
 	deleteOutlet($(this).closest('.sResultsMain'));
-});
-
-$(document).on('click', '#deleteReview', function(){
-	deleteReview($(this).closest('.sResultsMain'));
 });
 
 $(document).on('click', '#postReply', function(){
@@ -94,6 +110,8 @@ $(document).on('click', '#postReply', function(){
 						$(parentElem).remove();
 					}, 500);
 				});
+				var totalReviews = $('.mineNameHeader').find('#reviewLength').text()[0];
+				$('.mineNameHeader').find('#reviewLength').text(parseInt(totalReviews)-1 + " Reviews");
 			},
 			400 : function(res){
 				console.log(res.responseJSON.message);
@@ -106,7 +124,66 @@ $(document).on('click', '#postReply', function(){
 			}
 		}
 	})
-})
+});
+
+$(document).on('input', '#sBar', function(){
+	var sQuery = $(document).find('.sInpt #sBar').val();
+	if(sQuery.length==0){
+		$('.restaurantLists').text('');
+		if(pType!=2){
+			getOutletList("", 1);
+		}
+		else {
+			getOutletList(UserId, 1);
+		}
+	}
+	else{
+		var url = "";
+		console.log(pType);
+
+		if(pType!=2){//Not owner
+			url = '/outlet/regex/'+sQuery;
+		}
+		else{
+			url = '/outlet/regex/user/'+sQuery;
+		}
+		$.ajax({
+			type : 'GET',
+			url : url,
+			statusCode : {
+				200 : function(res){
+					if(res.list.length==0){
+						showError("No Outlets found! Showing all the available results..")
+						$('.restaurantLists').text('');
+						if(pType!=2){
+							getOutletList("", 1);
+						}
+						else {
+							getOutletList(UserId, 1);
+						}
+					}
+					else{
+						$('.restaurantLists').text('');
+						appendOutletList(res, 1);
+					}
+				},
+				400 : function(res){
+					showError(res.responseJSON.message);
+				}
+			}
+		})
+	}
+});
+
+$(document).on('click', '#deleteReview', function(){
+	var outletHeader  = $(this).closest('.sResultsMine').find('.mineNameHeader');
+	var outletId = $(outletHeader)[0].dataset.outletid;
+	var parentElem = $(this).closest('li');
+	var reviewId = $(parentElem)[0].dataset.reviewid;
+	console.log(parentElem);
+	console.log(reviewId, outletId);
+	deleteReview(parentElem, outletHeader, outletId, reviewId);
+});
 
 (function toggleFilterBtn() {
 	$("#fScore").click(function() {
@@ -281,16 +358,19 @@ $(document).on('click', '#postReply', function(){
 	});
 })();
 
-function InitailzeDisplay(refreshBool, res){
+function InitailzeDisplay(refreshBool, res, preAppRe){
 	if(refreshBool==0){
 		pType = res.priority;
-		if(res.priority==2)
-			getOutletList(res._id);
-		else
-			getOutletList("");
+		UserId = res._id;
+		if(res.priority==2){//Owner
+			getOutletList(res._id, preAppRe);
+		}
+		else{//user or Admin
+			$(document).find('#restSaveShowBtn').remove();
+			getOutletList("", preAppRe);
+		}
 	}
 	else {
-		// To be completed
 		$.ajax({
 			type : 'GET',
 			url : 'userInfo',
@@ -301,10 +381,11 @@ function InitailzeDisplay(refreshBool, res){
 				200 : function(res){
 					pType = res.details.priority;
 					if(res.details.priority==2){
-						getOutletList(res.details._id);
+						getOutletList(res.details._id, 1);
 					}
 					else {
-						getOutletList("");
+						$(document).find('#restSaveShowBtn').remove();
+						getOutletList("", 1);
 					}
 				}
 			}
@@ -328,7 +409,7 @@ function InitailzeDisplay(refreshBool, res){
 					$('.logInDisplay').remove();
 					$('.indexPage').fadeIn();
 					//can be admin-94321, user-1, owner-2
-					InitailzeDisplay(0, res.details);
+					InitailzeDisplay(0, res.details, 1);
 				},
 				400 : function(res){
 					showLoginError(res.responseJSON.message);
@@ -453,9 +534,12 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
         <tr id="restaurantInfo">\
           <td>\
             <div id="restaurantHeading">\
-              <p id="restaurantName">' + outletObj.name + '</p>\
-              <button class="i ionicons ion-android-delete" id="deleteOutlet" type="button"></button>\
-            </div>\
+              <p id="restaurantName">' + outletObj.name + '</p>';
+
+						if(pType!=1)
+							outletDiv = outletDiv + '<button class="showReply" id="deleteOutlet" type="button">Delete</button>';
+
+						outletDiv = outletDiv + '</div>\
             <hr/>\
             <div id="details">\
               <p id="aboutUs">' + outletObj.desc + '</p>\
@@ -482,7 +566,7 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
 				  </td>\
 		</tr></tbody></table>'
 
-		if(pType != 2){
+		if(pType !=2){
 						outletDiv = outletDiv + '<table id="restaurantExReview">\
 								<tr style="width:100%;margin:0px;display:inline-flex">\
 								<td style="padding-left:20px;float:left;min-width:50%;text-align:center">\
@@ -511,8 +595,11 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
 								 </td>\
 								 </tr>\
 								 </table>\
-								 <table>\
-								<tbody>\
+								 <table>'
+								 console.log(pType);
+					if(pType == 1){
+							console.log('executed');
+								outletDiv = outletDiv + '<tbody>\
 									<tr id="resultmessage">\
 										<td style="float:left;width:100%">\
 											<div class="alert alert-success" id="succReviewPost" style="margin-left:10px;margin-right:10px;">\<b>Success</b></div>\
@@ -551,8 +638,9 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
 											<button id="reviewPost" type="button">Post</button>\
 										</td>\
 									</tr>\
-								</tbody>\
-							</table>';
+								</tbody>'
+					}
+							outletDiv = outletDiv + '</table>';
 		}
 
 		outletDiv = outletDiv + '</div></div>';
@@ -564,7 +652,7 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
 		$(outletDiv).hide().appendTo(parentElem).fadeIn("slow");
 	}
 	else {
-		$(parentElem).html($(outletDiv).find('.sResultBox')).fadeIn("slow");
+		$(parentElem).hide().html($(outletDiv)).fadeIn("slow");
 	}
 
 	starRating();
@@ -615,8 +703,7 @@ function addReviewsDiv(res, name, outletId){
       <div style="display:inline-flex;"></div>\
       <p id="outletname">'+ name +'</p>'
 
-			if(pType!=2)
-				reviewHeader = reviewHeader + '<p id="reviewLength">' + res.reviewList.length + ' Reviews</p>';
+				reviewHeader = reviewHeader + '<p id="reviewLength"></p>';
 
 		reviewHeader = reviewHeader +'</div><div class="reviewList">';
 
@@ -658,9 +745,12 @@ function addReviewsDiv(res, name, outletId){
 							<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>\
 							</div>\
 							</div>\
-							</div>\
-							<button class="i ionicons ion-android-delete" id="deleteReview" type="button">\
-							</button></td>\
+							</div>'
+
+							if(pType!=1 && pType!=2)
+								top  = top + '<button class="showReply" id="deleteReview" type="button">Delete';
+
+							top = top + '</button></td>\
 	          </tr>\
 	          <tr id="reviewTextDiv">\
 	            <td>\
@@ -681,7 +771,7 @@ function addReviewsDiv(res, name, outletId){
 
 	          var replied  = '<td style="float:right">\
 	              <button class="showReply" id="showReplyBtn" type="button">Show Reply</button>\
-	              <p id="replyText" style="display:none"><span style="font-weight:500;font-size:15px"> Owner : ' + reply + '</p>\
+	              <p id="replyText" style="display:none"><span style="font-weight:500;font-size:15px">' + reply + '</p>\
 	            </td>\
 	          </tr>';
 
@@ -715,11 +805,13 @@ function addReviewsDiv(res, name, outletId){
 	</div>'
 
 	var finalReviewDiv = reviewHeader + reviewList + reviewRemainder;
-	if($('#mainResults').find('.reviewsDiv').length!=0)
+
+	if($('#mainResults').find('.reviewsDiv li').length!=0)
 		$("#mainResults").find('.reviewsDiv').replaceWith(finalReviewDiv);
 	else {
 		$(finalReviewDiv).appendTo("#mainResults");
 	}
+		$('#mainResults').find('.mineNameHeader #reviewLength').text(parseInt($('#mainResults').find('.reviewList li').length) + " Reviews");
 }
 
 function getReviewsById(outletId, name){
@@ -808,7 +900,7 @@ function sortListRating(list){
 	return list;
 }
 
-function appendOutletList(data) {
+function appendOutletList(data, preAppRe) {
 	var Outlets = data.list;
 	list = new Array()
 
@@ -817,17 +909,20 @@ function appendOutletList(data) {
 		list.push(findOutletObj(outletObj));
 	}
 	list = sortListRating(list);
+	console.log(list);
+
 	for(each in list){
-		addOutletDiv(list[each], $(".restaurantLists"), 1);
+		addOutletDiv(list[each], $(".restaurantLists"), preAppRe);
 	}
 }
 
-function getOutletList(userId) {
+function getOutletList(userId, preAppRe) {
 	$.ajax({
 		type: 'GET',
 		url: '/outlet/'+userId,
 		success: function(data) {
-			appendOutletList(data);
+			console.log(data);
+			appendOutletList(data, preAppRe);
 		},
 		statusCode: {
 			401: function(res) {
@@ -874,8 +969,8 @@ function updateOutletInfo(message, outletId, reviewObj, parentElem, next){
 		url : '/outlet/outletId/'+outletId,
 		statusCode : {
 			200 : function(res){
-				addOutletDiv(findOutletObj(res.list), parentElem, 0, 1);
-				return next(null, message);
+				addOutletDiv(findOutletObj(res.list), parentElem, 0, 1)
+				next(null, message);
 			},
 			400 : function(res){
 				console.log(res.responseJSON.message);
@@ -891,10 +986,10 @@ function putReview(outletId, reviewObj, parentElem, updateOutletInfo, next){
 		data : reviewObj,
 		statusCode : {
 			200 : function(res){
-				return updateOutletInfo(res.message, outletId, reviewObj, parentElem, next);
+				updateOutletInfo(res.message, outletId, reviewObj, parentElem, next);
 			},
 			400 : function(res){
-				return next(res.responseJSON.message, null);
+				next(res.responseJSON.message, null);
 			}
 		}
 	});
@@ -970,6 +1065,37 @@ function deleteOutlet(parentElem){
 					$('.reviewsDiv').hide();
 					$(parentElem).fadeOut();
 					$(parentElem).remove();
+				},
+				400 : function(res){
+					showError(res.responseJSON.message);
+				},
+				401 : function(res){
+					showError(res.responseJSON.message);
+				},
+				500 : function(res){
+					showError(res.responseJSON.message);
+				}
+			}
+		});
+};
+
+function deleteReview(parentElem, outletHeader, outletId, reviewId){
+		$.ajax({
+			type : 'DELETE',
+			url : '/outlet/review/'+outletId+'/'+reviewId,
+			statusCode: {
+				200 : function(res){
+					showSuccess(res.message);
+					$(parentElem).fadeOut(function(){
+						setTimeout(function(){
+							$(parentElem).remove();
+						}, 500);
+					});
+
+					var totalReviews = $(outletHeader).find('#reviewLength').text()[0];
+
+					$(outletHeader).find('#reviewLength').text(parseInt(totalReviews)-1 + " Reviews");
+					//Can add another js function to reload exactly that outlet that has been changed
 				},
 				400 : function(res){
 					showError(res.responseJSON.message);

@@ -175,3 +175,35 @@ module.exports.getOrgById = function(outletId, callback){
 		_id : outletId
 	}, callback);
 }
+
+module.exports.regexSearch = function(pattern, callback){
+	pattern = new RegExp(pattern, 'i');
+	Org.find({
+		$or : [
+			{
+				'metadata.name' : pattern
+			},
+			{
+				addr : pattern
+			}
+		]
+	}).exec(callback);
+}
+
+module.exports.regexSearchById = function(username, pattern, callback){
+	pattern = new RegExp(pattern, 'i');
+	Org.find({
+		$and : [
+				{'metadata.owner' : username},
+				{
+					$or : [
+						{
+							'metadata.name' : pattern
+						},
+						{
+							addr : pattern
+						}
+					]
+				}
+	]}).exec(callback);
+}
