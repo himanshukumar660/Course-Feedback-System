@@ -439,7 +439,7 @@ $(document).on('click', '#deleteReview', function(){
 				counterNotShown++;
 			}
 			if (stars >= rating) {
-				$(this).fadeIn();
+				$(this).show();
 				counterShown++;
 			}
 		});
@@ -458,7 +458,7 @@ $(document).on('click', '#deleteReview', function(){
 		//display all the results
 		$(".sResultsMain").find($(".sResultBox")).each(function() {
 			if ($(this).css("display") == "none")
-				$(this).fadeIn();
+				$(this).show();
 		});
 		var totalResults = $(".sResultsMain").find($(".sResultBox")).length;
 		fBtn.closest($("#recentSearch")).find($("#numberResults")).text("Showing " + totalResults + " results");
@@ -603,7 +603,7 @@ function InitailzeDisplay(refreshBool, res, preAppRe){
 			statusCode: {
 				200 : function(res){
 					$('.logInDisplay').remove();
-					$('.indexPage').fadeIn();
+					$('.indexPage').show();
 					//can be admin-94321, user-1, owner-2
 					InitailzeDisplay(0, res.details, 1);
 				},
@@ -844,13 +844,13 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
 		outletDiv = outletDiv + '</div></div>';
 
 	if(preAppRe==1){
-		$(outletDiv).hide().prependTo(parentElem).fadeIn("slow");
+		$(outletDiv).hide().prependTo(parentElem).show();
 	}
 	else if(preAppRe==-1){
-		$(outletDiv).hide().appendTo(parentElem).fadeIn("slow");
+		$(outletDiv).hide().appendTo(parentElem).show();
 	}
 	else {
-		$(parentElem).hide().html($(outletDiv)).fadeIn("slow");
+		$(parentElem).hide().html($(outletDiv)).show();
 	}
 
 	starRating();
