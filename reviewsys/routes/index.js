@@ -385,11 +385,11 @@ router.get('/outlet/:userId', [ensureAuthentication, getUsernameById], function(
 });
 
 router.get('/users/', [ensureAuthentication, checkAdminPriority], function(req, res, next){
-  User.getUsers(function(user_err, user_res){
+  User.getUsersExceptAdmin(function(user_err, user_res){
     if(user_err)
     {
       res.status(400).send({
-        message : user_err
+        message : "Unable to get user details"
       })
     }
     else{

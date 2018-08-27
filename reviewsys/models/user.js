@@ -54,8 +54,12 @@ module.exports.comparePassword = function(candidatePassowrd, hash, callback){
     });
 }
 
-module.exports.getUsers = function(callback) {
-	User.find({}).exec(callback);
+module.exports.getUsersExceptAdmin = function(callback) {
+	User.find({
+		priority : {
+			$ne : 94321
+		}
+	}).exec(callback);
 };
 
 module.exports.getUserById = function(id, callback) {

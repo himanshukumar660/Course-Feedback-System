@@ -68,6 +68,7 @@ block content
 						.rTool
 							div(style='display:inline-flex')
 								p.rToolBtns.rToolBtnActive.showAll Restaurants
+								p.rToolBtns.showUsers Users
 							div(style='display:inline-flex')
 								button#logoutBtn Logout
 		
@@ -132,10 +133,39 @@ block content
 								button#restSaveBtn.showReply(type="button") Save
 					
 					.restaurantLists
-						
+			
+		#userList(style="display:none")
+			.userListDiv(style='left: 2%;top:120px;border:none')
+				.header
+					h.headerContent(style="float:left") User List
+					h.headerContent.listLen(style="float:right") 16 Users
+				.alert.alert-success#regSucc(style="margin:10px auto")
+					b Success
+					.glyphicon.glyphicon-remove#close_error
+				.alert.alert-danger#err(style="margin:10px auto")
+					b Error
+					.glyphicon.glyphicon-remove#close_error
+				
+				.usersList
+				
+			.ownerListDiv(style='right:2%;top:120px;border:none')
+				.header
+					h.headerContent(style="float:left") Owners List
+					h.headerContent.listLen(style="float:right") 16 Onwers
+					
+				.alert.alert-success#regSucc(style="margin:10px auto")
+					b Success
+					.glyphicon.glyphicon-remove#close_error
+				.alert.alert-danger#err(style="margin:10px auto")
+					b Error
+					.glyphicon.glyphicon-remove#close_error
+				
+				.ownersList
+					
 	script(src='javascripts/review.js')
 	
 	if authenticated
 		script.
 			document.getElementsByClassName("indexPage")[0].style.display = "block";
 			InitailzeDisplay(1, null);
+		

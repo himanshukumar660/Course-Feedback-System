@@ -1,6 +1,183 @@
 var pType ;
 var UserId = "";
 
+function removeActiveClass() {
+	$(".rToolBtns.rToolBtnActive").each(function(index) {
+		$(this).removeClass("rToolBtnActive");
+	});
+}
+
+function addActiveClass(element) {
+	element.addClass("rToolBtnActive");
+}
+
+$(document).on('click', '.showUsers', function(){
+	$('#mainResults').hide();
+	$('#userList').show();
+	removeActiveClass();
+	addActiveClass($(this));
+	var parentElem = $('#userList');
+	getUserList(parentElem);
+});
+
+function showErrorUserList(elem ,message) {
+	$(elem).closest("#err b").text(message);
+	$(elem).closest('#err').show();
+	$(elem).closest('#regSucc').hide();
+	setTimeout(function() {
+		$(elem).closest('#err').fadeOut();
+	}, 3000);
+}
+
+function showSuccessUserList(elem, message) {
+	$(elem).closest("#regSucc b").text(message);
+	$(elem).closest('#regSucc').show();
+	$(elem).closest('#err').hide();
+	setTimeout(function() {
+		$(elem).closest('#regSucc').fadeOut();
+	}, 3000);
+}
+
+$(document).on('click', '.showAll', function(){
+	$('#mainResults').show();
+	$('#userList').hide();
+	removeActiveClass();
+	addActiveClass($(this));
+	$('.restaurantLists').text('');
+	console.log(pType, UserId);
+
+	if(pType!=2)
+		getOutletList("", 1);
+	else if(pType==2)
+		getOutletList(UserId, 1);
+});
+
+function findList(priority, data){
+	var list = new Array();
+	for(var each in data){
+		if(data[each].priority==priority){
+			list.push(data[each]);
+		}
+	}
+	return list;
+}
+
+function findListDiv(list, priority){
+	var listDiv = "";
+	var btnText = "";
+	if(priority==1){
+		btnText = "Make Owner";
+	}
+	else if(priority==2){
+		btnText = "Make User";
+	}
+	for(var each in list){
+		listDiv = listDiv + '<li data-userid="' + list[each]._id + '" data-priority="'+ list[each].priority +'"">\
+			<table id="reviewTableDiv">\
+				<tbody>\
+					<tr id="reviewInfoDiv">\
+						<td style="float:left;">\
+							<h id="user_name">' + list[each].name + '</h><br/>\
+							<h id="user_username">' + list[each].username + '</h>\
+						</td>\
+						<td style="float:right;">\
+							<button class="showReply" id="deleteUser" type="button" style="min-width:100px;">Delete</button>\
+							<button class="showReply" id="changePriority" type="button" style="min-width:100px;">'+ btnText +'</button>\
+						</td>\
+					</tr>\
+				</tbody>\
+			</table>\
+		</li>'
+	}
+	return listDiv;
+}
+
+function addToListDiv(priority , list){
+	if(priority==1){//user
+		$('.usersList').text('');
+		var listDiv = findListDiv(list,1);
+		$('.usersList').html(listDiv);
+		$('#userList .userListDiv').find('h.headerContent.listLen').text(list.length+" Users");
+	}
+	else if(priority==2){//Owner
+			$('.ownersList').text('');
+			var listDiv = findListDiv(list,2);
+			$('.ownersList').html(listDiv);
+			$('#userList .ownerListDiv').find('h.headerContent.listLen').text(list.length+" Owners");
+	}
+}
+
+$(document).on('click', '#changePriority', function(){
+	changePriority(this);
+});
+
+$(document).on('click', '#deleteUser', function(){
+	deleteUser(this);
+});
+
+function deleteUser(parentElem){
+	var userId = $(parentElem).closest("li").attr('data-userid');
+
+	$.ajax({
+		type : "DELETE",
+		url : "users/"+userId,
+		statusCode : {
+			200 : function(res){
+				$('.showUsers').click();
+			},
+			400 : function(res){
+				console.log(res.responseJSON.message);
+			}
+		}
+	});
+}
+
+function changePriority(parentElem){
+	var userId = $(parentElem).closest("li").attr('data-userid');
+	var priority = $(parentElem).closest("li").attr('data-priority');
+	if(priority==1){
+		priority = 2;
+	}
+	else if(priority==2){
+		priority = 1;
+	}
+	console.log(userId, priority);
+
+	$.ajax({
+		type : "PUT",
+		url : "/users/change/"+priority+"/"+userId,
+		statusCode : {
+			200 : function(res){
+				$('.showUsers').click();
+			},
+			400 : function(res){
+				console.log(res.responseJSON.message);
+			}
+		}
+	});
+}
+
+function getUserList(parentElem){
+	$.ajax({
+		type : 'GET',
+		url : '/users/',
+		statusCode : {
+			200 : function(res){
+				var users = findList(1, res.list);
+				var owners = findList(2, res.list);
+				addToListDiv(1, users);
+				addToListDiv(2, owners);
+			},
+			400 : function(res){
+				console.log(res.responseJSON.message);
+			},
+			401 : function(res){
+				console.log(res.responseJSON.message);
+			}
+		}
+	})
+}
+
 function transitForms(elem) {
 	$(elem).closest('.card-body').find('#err').hide();
 	$(elem).closest('.card-body').find('#regSucc').hide();
@@ -183,6 +360,16 @@ $(document).on('click', '#deleteReview', function(){
 	console.log(parentElem);
 	console.log(reviewId, outletId);
 	deleteReview(parentElem, outletHeader, outletId, reviewId);
+
+	var outletElem = $('.restaurantLists').find('.sResultsMain[data-outletid='+outletId+']');
+	updateOutletInfo("Successfully deleted the review", outletId, "", outletElem, function(err, res){
+		if(err){
+			showReviewPostError(err, outletElem);
+		}
+		else {
+			showReviewPostSuccess(res, outletElem);
+		}
+	});
 });
 
 (function toggleFilterBtn() {
@@ -361,6 +548,15 @@ $(document).on('click', '#deleteReview', function(){
 function InitailzeDisplay(refreshBool, res, preAppRe){
 	if(refreshBool==0){
 		pType = res.priority;
+
+		//Show the User list tab below the search bar
+		if(pType!=1 && pType!=2){
+			$('.showUsers').show();
+		}
+		else{
+			$('.showUsers').remove();
+		}
+
 		UserId = res._id;
 		if(res.priority==2){//Owner
 			getOutletList(res._id, preAppRe);
@@ -511,6 +707,7 @@ function showSuccess(message) {
 	}, 3000);
 }
 
+
 function sanitizationUtility(dirtyObj, callback) {
 	cleanObj = new Object();
 	for (var each in dirtyObj) {
@@ -597,16 +794,17 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
 								 </table>\
 								 <table>'
 								 console.log(pType);
-					if(pType == 1){
-							console.log('executed');
+					if(pType != 2){
 								outletDiv = outletDiv + '<tbody>\
 									<tr id="resultmessage">\
 										<td style="float:left;width:100%">\
 											<div class="alert alert-success" id="succReviewPost" style="margin-left:10px;margin-right:10px;">\<b>Success</b></div>\
 											<div class="alert alert-danger" id="errReviewPost" style="margin-left:10px;margin-right:10px"><b>Error</b></div>\
 										</td>\
-									</tr>\
-									<tr id="userCommentRating">\
+									</tr>'
+					}
+					if(pType == 1){
+									outletDiv = outletDiv + '<tr id="userCommentRating">\
 										<td>\
 											<p>Your rating : </p>\
 										</td>\
@@ -806,12 +1004,9 @@ function addReviewsDiv(res, name, outletId){
 
 	var finalReviewDiv = reviewHeader + reviewList + reviewRemainder;
 
-	if($('#mainResults').find('.reviewsDiv li').length!=0)
-		$("#mainResults").find('.reviewsDiv').replaceWith(finalReviewDiv);
-	else {
-		$(finalReviewDiv).appendTo("#mainResults");
-	}
-		$('#mainResults').find('.mineNameHeader #reviewLength').text(parseInt($('#mainResults').find('.reviewList li').length) + " Reviews");
+	$('#mainResults').find('.reviewsDiv').remove();
+	$(finalReviewDiv).appendTo("#mainResults");
+	$('#mainResults').find('.mineNameHeader #reviewLength').text(parseInt($('#mainResults').find('.reviewList li').length) + " Reviews");
 }
 
 function getReviewsById(outletId, name){
@@ -969,7 +1164,7 @@ function updateOutletInfo(message, outletId, reviewObj, parentElem, next){
 		url : '/outlet/outletId/'+outletId,
 		statusCode : {
 			200 : function(res){
-				addOutletDiv(findOutletObj(res.list), parentElem, 0, 1)
+				addOutletDiv(findOutletObj(res.list), parentElem, 0)
 				next(null, message);
 			},
 			400 : function(res){
@@ -1028,7 +1223,7 @@ function putReview(outletId, reviewObj, parentElem, updateOutletInfo, next){
 						200 : function(data){
 							showSuccess(data.message);
 							$(".restSaveDiv").hide();
-							addOutletDiv(findOutletObj(data.details), $(".restaurantLists"), 1, 2);
+							addOutletDiv(findOutletObj(data.details), $(".restaurantLists"), 1);
 							//Clear values
 							var parentElem = $("button#restSaveBtn").closest("#restaurantSaveInfo");
 							$(parentElem).find("input[name=restName]").val('');

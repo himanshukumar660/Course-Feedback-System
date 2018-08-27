@@ -79,7 +79,7 @@ body {
 .showReply, #postReply, #reviewPost{
     cursor: pointer;
     margin: 5px;
-    max-width: 104px;
+    max-width: 120px;
     min-width: 72px;
     align-items: center;
     display: inline-flex;
@@ -142,6 +142,16 @@ body {
   margin-right: 15px;
   padding: 10px;
 }
+#deleteUser{
+  background-color: red;
+}
+
+#deleteUser:hover{
+  border: none;
+  box-shadow: 0px 0px 5px red;
+}
+
+
 #deleteOutlet, #deleteReview{
   font-size: 12px;
   padding: 0px;
@@ -153,7 +163,7 @@ body {
   min-width: 45px;
 }
 
-#deleteOutlet:hover,#deleteReview:hover{
+#deleteOutlet:hover, #deleteReview:hover{
   border: none;
   box-shadow: 0px 0px 10px red;
 }
@@ -196,7 +206,7 @@ body {
   border:1px solid #ddd;
   width:100%;
 }
-.reviewList{
+.reviewList, .usersList, .ownersList{
   list-style: none;
   overflow-y: scroll;
   position: absolute;
@@ -205,7 +215,7 @@ body {
   height:600px;
   padding-bottom: 200px;
 }
-.reviewList li{
+.reviewList li, .usersList li, .ownersList li{
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -391,10 +401,16 @@ table tr {
   padding: 10px;
   margin:10px;
 }
-#mainResults{
+#mainResults,#userList{
 	display:inline-flex;
 	width:100%;
 	margin-top:130px;
+}
+#userList #regSucc, #userList #err{
+  margin : 20px auto;
+}
+#userList table#userOwnerListlist{
+
 }
 .sResultBox{
   max-width: 100%;
@@ -419,7 +435,7 @@ table tr {
 /*#sResultBox:hover{
   box-shadow: 0 4px 4px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
 }*/
-.mineNameHeader{
+.mineNameHeader, .header{
   padding-left: 10px;
   padding-top: 5px;
   padding-right: 10px;
@@ -600,7 +616,7 @@ img#sImgHeader{
 .rType{
   padding: 10px;
 }
-.sResultsMine{
+.sResultsMine, .userListDiv, .ownerListDiv{
   position: fixed;
   right: 15px;
   border: 1px solid lightgray;
@@ -644,13 +660,16 @@ img#sImgHeader{
   margin:10px;
 }
 #pReviewText, #nReviewText, #replyText{
-  font-size: 15px;
+  font-size: 14px;
   padding: 10px;
   padding-top: 0px;
   padding-bottom: 0px;
   margin-bottom: 0px;
 }
-#outletname{
+#user_name, #owner_name{
+  font-size: 14px;
+}
+#outletname, .headerContent{
   float:left;
   margin:10px;
   font-weight:800;
