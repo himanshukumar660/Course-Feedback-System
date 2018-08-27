@@ -230,53 +230,6 @@ function checkNotOwner(req, res, next){
   })
 }
 
-router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(username, req, res, next){
-    var sName, sDesc, sAddr, sOwner;
-
-    sName = xss(req.body.name);
-    sDesc = xss(req.body.desc);
-    sAddr = xss(req.body.address);
-    sOwner = username;
-
-  // Form Validaiton
-    req.checkBody("name").notEmpty();
-
-    // Check for errors
-    var errors = req.validationErrors();
-
-    if (errors) {
-      return res.status(400).send({
-        message : "Insufficient inputs",
-        errors: errors
-      });
-    }
-
-    var param = new Org({
-      metadata : {
-        name : sName,
-        owner : username
-      },
-        desc : sDesc,
-        addr : sAddr
-    });
-
-    //console.log(param);
-    Org.makeOrg(param, function(err_org, res_org){
-      if(err_org){
-        return res.status(409).send({
-          message : "Restaurants already exists"
-        })
-      }
-      else {
-        console.log(res_org);
-        return res.status(200).send({
-          message : "Restaurant added to database successfully",
-          details : res_org
-        });
-      }
-    });
-});
-
 router.get('/', function(req, res, next) {
   if(!req.session.user_id){
     res.render('index', { authenticated: false });
@@ -436,6 +389,53 @@ router.get('/outlet/regex/user/:pattern', [ensureAuthentication,getUsername], fu
       });
     }
   })
+});
+
+router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(username, req, res, next){
+    var sName, sDesc, sAddr, sOwner;
+
+    sName = xss(req.body.name);
+    sDesc = xss(req.body.desc);
+    sAddr = xss(req.body.address);
+    sOwner = username;
+
+  // Form Validaiton
+    req.checkBody("name").notEmpty();
+
+    // Check for errors
+    var errors = req.validationErrors();
+
+    if (errors) {
+      return res.status(400).send({
+        message : "Insufficient inputs",
+        errors: errors
+      });
+    }
+
+    var param = new Org({
+      metadata : {
+        name : sName,
+        owner : username
+      },
+        desc : sDesc,
+        addr : sAddr
+    });
+
+    //console.log(param);
+    Org.makeOrg(param, function(err_org, res_org){
+      if(err_org){
+        return res.status(409).send({
+          message : "Restaurants already exists"
+        })
+      }
+      else {
+        console.log(res_org);
+        return res.status(200).send({
+          message : "Restaurant added to database successfully",
+          details : res_org
+        });
+      }
+    });
 });
 
 router.put('/outlet/review/:outletId', [ensureAuthentication, checkNotOwner], function(user_details, req, res, next){
