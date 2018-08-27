@@ -1280,7 +1280,6 @@ function deleteReview(parentElem, outletHeader, outletId, reviewId){
 			url : '/outlet/review/'+outletId+'/'+reviewId,
 			statusCode: {
 				200 : function(res){
-					showSuccess(res.message);
 					$(parentElem).fadeOut(function(){
 						setTimeout(function(){
 							$(parentElem).remove();
