@@ -2,25 +2,25 @@
 This is a single page web application that can used as a feedback system for any group/organisation. All the user actions are performed via the REST API at the client side using AJAX.
 
 # Features
-1. User is able to create an account and log in. Password authentication is done through passport npm module.
+1. Students and Professors are able to create an account and log in. Password authentication is done through passport npm module.
 2. 3 roles are implemented with different permission levels
-    * Regular User: Can rate and leave a comment for a Course
-    * Owner: Can create his own courses and reply comments about owned organisation
+    * Regular Student: Can rate and leave a comment for a course
+    * Teacher/Professor: Can create his own courses and reply comments about owned courses
     * Admin: Can edit/delete all users, courses, comments, and reviews
 3. Reviews have:
     * A 5 star based rate
     * Date on which the review was made
     * Comment
-4. When a Regular User logs in he will see the courses List ordered by Rate Average
-5. When an Owner logs in he will see a the course list of only the ones owned by him, and the reviews pending to reply
-(Owners can reply the review once).
+4. When a Student logs in he will see the course list ordered by rate average
+5. When an Teacher/Professor logs in he will see a course list of only the ones owned by him, and the reviews pending to reply
+(Teachers/Professors can reply the review once).
 6. Courses detailed view should have:
     * The overall average rating
     * The highest rated review
     * The lowest rated review
     * Last reviews with rate, comment, and reply
 7. Course list can be filtered by Rating
-8. Regex Search for all the courses available.
+8. Regex Search for all the courses available. Available to all the students, Teacher/Professsors and Admin.
 9. All the APIs are RESTful in nature.
 
 # Security Features
@@ -29,6 +29,12 @@ This is a single page web application that can used as a feedback system for any
 3. Each input is sanitized both at the client side and server side to provide required level of protection from XSS, Cross-site scripting etc.
 
 # APIS list
+
+The Following APIs can be called for registrations and login purposes. No Authentication is required to call these APIs.
+1. `POST /user/register`
+2. `POST /user/login`
+
+The Following APIs can only be called once the user is authenticated. The APIS are secured through a channel of middlewares which check for all the requirements that must be satisfied before one can access the resource of the API.
 1. `GET /`
 2. `GET /userInfo`
 3. `GET /outlet`
@@ -46,9 +52,7 @@ This is a single page web application that can used as a feedback system for any
 15. `DELETE /outlet/:outletId`
 16. `DELETE /outlet/review/:outletId/:reviewId`
 17. `DELETE /users/:userId`
-18. `POST /user/register`
-19. `POST /user/login`
-20. `GET /user/logout`
+18. `GET /user/logout`
 
 # SetUp
 To set up the development environment, you need to follow the following steps
