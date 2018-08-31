@@ -4,23 +4,23 @@ This is a single page web application that can used as a feedback system for any
 # Features
 1. User is able to create an account and log in. Password authentication is done through passport npm module.
 2. 3 roles are implemented with different permission levels
-    * Regular User: Can rate and leave a comment for a restaurant
-    * Owner: Can create his own restaurants and reply comments about owned organisation
-    * Admin: Can edit/delete all users, restaurants, comments, and reviews
+    * Regular User: Can rate and leave a comment for a Course
+    * Owner: Can create his own courses and reply comments about owned organisation
+    * Admin: Can edit/delete all users, courses, comments, and reviews
 3. Reviews have:
     * A 5 star based rate
     * Date on which the review was made
     * Comment
-4. When a Regular User logs in he will see the restaurant List ordered by Rate Average
+4. When a Regular User logs in he will see the courses List ordered by Rate Average
 5. When an Owner logs in he will see a the course list of only the ones owned by him, and the reviews pending to reply
 (Owners can reply the review once).
-6. Restaurants detailed view should have:
+6. Courses detailed view should have:
     * The overall average rating
     * The highest rated review
     * The lowest rated review
     * Last reviews with rate, comment, and reply
 7. Course list can be filtered by Rating
-8. Regex Search for all the restaurants available.
+8. Regex Search for all the courses available.
 9. All the APIs are RESTful in nature.
 
 # Security Features
