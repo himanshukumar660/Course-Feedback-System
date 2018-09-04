@@ -4,20 +4,19 @@ Icon?
 ._*
 
 # Windows
-.reviewsys/Thumbs.db
-.reviewsys/ehthumbs.db
-.reviewsys/Desktop.ini
+.ehthumbs.db
+.Desktop.ini
 
 # Linux
 .directory
-.reviewsys/node_modules
-.reviewsys/package-lock.json
+.node_modules
+.package-lock.json
 *~
 
 
 # npm
-.reviewsys/*.log
-.reviewsys/*.gz
+.*.log
+.*.gz
 
 
 # Coveralls
