@@ -757,7 +757,7 @@ hr{
   width:100%;
   outline: none;
   border-color: #ddd;
-  display: none;
+  display: block;
 }
 .options p{
   font-size: 15px;

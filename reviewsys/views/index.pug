@@ -24,7 +24,7 @@ block content
 						select#typeSelect(name="pType")
 							option(value='1', selected='selected') User
 							option(value='2') Owner
-							option(value='94321') Admin
+							//option(value='94321') Admin
 						div(style="text-align:center;padding:15px;")
 							button.showReply(id="registerBtn" type="submit" name="submit") Register
 						.modal-footer
@@ -67,7 +67,7 @@ block content
 					div
 						.rTool
 							div(style='display:inline-flex')
-								p.rToolBtns.rToolBtnActive.showAll Restaurants
+								p.rToolBtns.rToolBtnActive.showAll Courses
 								p.rToolBtns.showUsers Users
 							div(style='display:inline-flex')
 								button#logoutBtn Logout
@@ -126,9 +126,9 @@ block content
 					
 					.restSaveDiv
 						#restaurantSaveInfo
-							input(type="text" name="restName" placeholder="Restaurant Name" autcomplete="off" id="restNameSave" required)
-							textarea(id="restDescSave" name="restDesc" placeholder="Restaurant Description..." required )
-							input(type="text" name="restAdd" placeholder="Restaurant Address" autcomplete="off" id="restAddSave" required)
+							input(type="text" name="restName" placeholder="Course Name" autcomplete="off" id="restNameSave" required)
+							textarea(id="restDescSave" name="restDesc" placeholder="Course Description..." required )
+							input(type="text" name="restAdd" placeholder="Taken at" autcomplete="off" id="restAddSave" required)
 							div(style="text-align:right;width:100%")
 								button#restSaveBtn.showReply(type="button") Save
 					
