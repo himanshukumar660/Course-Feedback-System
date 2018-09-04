@@ -3,7 +3,7 @@ This is a single page web application that can used as a feedback system for any
 
 # Features
 1. Students and Professors are able to create an account and log in. Password authentication is done through passport npm module.
-2. 3 roles are implemented with different permission levels
+2. 3 roles are implemented with different administrative rights
     * Regular Student: Can rate and leave a comment for a course
     * Teacher/Professor: Can create his own courses and reply comments about owned courses
     * Admin: Can edit/delete all users, courses, comments, and reviews
@@ -23,6 +23,16 @@ This is a single page web application that can used as a feedback system for any
 8. Regex Search for all the courses available. Available to all the students, Teacher/Professsors and Admin.
 9. All the APIs are RESTful in nature.
 
+# Screenshots/GIFs
+   ## Student/Professor Registration
+   ![Student/Teacher Registration](https://github.com/himanshukumar660/Course-Feedback-System/blob/master/ScreenShots/registration.gif)
+   ## Professor Dashboard
+   ![Student/Teacher Registration](https://github.com/himanshukumar660/Course-Feedback-System/blob/master/ScreenShots/teacher.gif)
+   ## Student Dashboard
+   ![Student/Teacher Registration](https://github.com/himanshukumar660/Course-Feedback-System/blob/master/ScreenShots/student.gif)
+   ## Admin Dashboard
+   ![Student/Teacher Registration](https://github.com/himanshukumar660/Course-Feedback-System/blob/master/ScreenShots/admin.gif)
+   
 # Security Features
 1. Each access to API is protected by several middleware layer that if the client should be made access to the resource.
 2. Each input by the user is protected from common Security vulnerabilities.
