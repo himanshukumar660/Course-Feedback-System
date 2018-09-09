@@ -19,6 +19,11 @@ body {
   margin: 0px auto;
   text-align: center;
 }
+#reviewtableRow{
+  width:100%;
+  margin:0px;
+  display:inline-flex;
+}
 #sImg{
   width: 400px;
   max-width: 90%;
@@ -237,6 +242,7 @@ ul.reviewList li{
   background-color: #eff7ff;
 }
 #sepRev{
+  border-top: none;
   border-left: 1px solid #ddd;
   min-width: 50%;
   float: right;
@@ -1128,4 +1134,17 @@ position:absolute;
 /* Selected state of the stars */
 .rating-stars ul > li.star.selected > i.fa {
   color:#FF912C;
+}
+
+@media (max-width:600px)  { 
+    #seprev{
+      border-left: none;
+      border-top: 1px solid #ddd;      
+    }
+    #reviewtableRow{
+      display:inline-table;
+    }
+    #reviewtableRow td{
+      width:100%;
+    }
 }

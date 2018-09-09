@@ -765,7 +765,7 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
 
 		if(pType !=2){
 						outletDiv = outletDiv + '<table id="restaurantExReview">\
-								<tr style="width:100%;margin:0px;display:inline-flex">\
+								<tr id="reviewtableRow">\
 								<td style="padding-left:20px;float:left;min-width:50%;text-align:center">\
 								<div class="rStats"><div class="star-ratings-css"><div class="star-ratings-css-top">';
 
