@@ -5,8 +5,11 @@ var path = require("path");
 var router = express.Router();
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuthStrategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 var User = require("../models/user");
 var xss = require("xss");
+
 
 passport.serializeUser(function(user, done) {
 	done(null, user.id);
@@ -36,6 +39,37 @@ passport.use(new LocalStrategy(
             });
         });
     }
+));
+
+//google stratergy
+passport.use(new GoogleStrategy({ //customize the keys
+		clientID: 'GOOGLE_CLIENT_ID',
+		clientSecret: 'GOOGLE_CLIENT_SECRET',
+		callbackURL: "http://www.example.com/auth/google/callback"
+	},
+	function (accessToken, refreshToken, profile, done) {
+		User.findOrCreate({
+			googleId: profile.id
+		}, function (err, user) {
+			return done(err, user);
+		});
+	}
+));
+
+//facebook stratergy
+passport.use(new FacebookStrategy({ //customize the keys 
+		clientID: 'FACEBOOK_APP_ID',
+		clientSecret: 'FACEBOOK_APP_SECRET',
+		callbackURL: "http://www.example.com/auth/facebook/callback"
+	},
+	function (accessToken, refreshToken, profile, done) {
+		User.findOrCreate(..., function (err, user) {
+			if (err) {
+				return done(err);
+			}
+			done(null, user);
+		});
+	}
 ));
 
 function ensureAuthentication(req, res, next){
@@ -127,6 +161,29 @@ router.post('/login', function(req, res, next) {
 		}
   })(req, res, next);
 });
+
+//google ouath2
+router.get('/auth/google',
+	passport.authenticate('google', {
+		scope: ['profile ','email']
+}));
+
+router.get('/auth/google/callback',//mention the callback url key value
+	passport.authenticate('google', {
+		failureRedirect: '/login'
+	}),
+	function (req, res) {
+		res.redirect('/');
+});
+
+//facebook oauth
+router.get('/auth/facebook', passport.authenticate('facebook'));
+
+router.get('/auth/facebook/callback', //mention the callback url key value
+	passport.authenticate('facebook', { 
+		successRedirect: '/', //change urls when the credentials are success
+		failureRedirect: '/login'
+	}));
 
 router.get("/logout", function(req, res) {
 	if(req.session.user_id) {

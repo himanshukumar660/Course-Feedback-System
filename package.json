@@ -23,6 +23,8 @@
     "mongoose-unique-validator": "*",
     "mongodb": "*",
     "passport": "*",
+    "passport-google-oauth": "*",
+    "passport-facebook":"*",
     "passport-http": "*",
     "passport-local": "*",
     "randomstring": "*",
