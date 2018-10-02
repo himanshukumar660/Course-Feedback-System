@@ -15,7 +15,8 @@ services:
     image: mongo
     ports: [ "27017:27017" ]
     networks: [ feed-net ]
-    command: --logpath=/dev/null
+    volumes: [ "./data/db:/data/db" ]
+    command: bash -c "mongod --dbpath=./data/db --logpath=/dev/null"
 
 networks:
     feed-net:
