@@ -8,10 +8,10 @@ services:
     volumes: [ ".:/feedback-system" ]
     ports: [ "3000:3000" ]
     networks: [ feed-net ]
-    links: [ mongo ]
+    links: [ feedback-system-mongo ]
 
-  mongo:
-    container_name: mongo
+  feedback-system-mongo:
+    container_name: feedback-system-mongo
     image: mongo
     ports: [ "27017:27017" ]
     networks: [ feed-net ]
