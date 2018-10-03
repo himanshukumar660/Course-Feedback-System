@@ -76,3 +76,10 @@ To run the project on local server, first navigate to the project directory in y
 3. Now run `cd reviewsys`, or go inside the project folder.
 4. Now run `nodemon start` in the terminal.
 5. Open `localhost:3000` from your favourite browser.
+
+# Running the Project with Docker nad docker-compose
+To run the project on docker server, first you need install Docker env in your system.
+I suggest you follow these steps:
+1. Build docker image for out project `docker build -t feed-system-img .`.
+2. ... And `docker-compose build`
+3. Finally `docker-compose up`
