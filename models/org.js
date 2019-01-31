@@ -36,6 +36,9 @@ var reviewSchema = new Schema({
 			type : String,
 			default : ""
 		},
+		contact_details:{
+			type : String
+		}
 		date : {
 			type : Date,
 			default : Date.now()

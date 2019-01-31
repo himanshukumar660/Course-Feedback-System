@@ -397,6 +397,7 @@ router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(user
     sName = xss(req.body.name);
     sDesc = xss(req.body.desc);
     sAddr = xss(req.body.address);
+    contact = xss(req.body.contact);
     sOwner = username;
 
   // Form Validaiton
@@ -418,7 +419,8 @@ router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(user
         owner : username
       },
         desc : sDesc,
-        addr : sAddr
+        addr : sAddr,
+        contact : contact 
     });
 
     //console.log(param);
