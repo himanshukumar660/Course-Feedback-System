@@ -1,0 +1,26 @@
+# OS X
+.DS_Store*
+Icon?
+._*
+
+# Windows
+.ehthumbs.db
+.Desktop.ini
+
+# Linux
+.directory
+.node_modules
+.package-lock.json
+*~
+
+
+# npm
+.*.log
+.*.gz
+
+
+# Coveralls
+coverage
+
+# Benchmarking
+benchmarks/graphs
