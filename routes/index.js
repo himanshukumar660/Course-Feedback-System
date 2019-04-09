@@ -392,6 +392,7 @@ router.get('/outlet/regex/user/:pattern', [ensureAuthentication,getUsername], fu
 });
 
 router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(username, req, res, next){
+
     var sName, sDesc, sAddr, sOwner, sLinks = [];
 
     sName = xss(req.body.name);
@@ -427,7 +428,8 @@ router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(user
         desc : sDesc,
         addr : sAddr,
         link : sLinks,
-        contact : contact 
+        contact : contact, 
+        addr : sAddr
     });
 
     //console.log(param);

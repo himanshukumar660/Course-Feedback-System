@@ -199,7 +199,7 @@ $('#inputRegisterFeilds').keyup(function(event){
 	if(event.keyCode == 13){
 		$('#registerBtn').click();
 	}
-})
+});
 
 $(document).on('click', '#close_error', function() {
 	$(this).parent().hide();
@@ -774,6 +774,8 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
   			}          
 
             outletDiv = outletDiv + '</span></div>\
+              <p id="address"> <i class="ionicons ion-location" style="padding-right:10px"></i>' + outletObj.addr + '</p>\
+            </div>\
           </td>\
 		      <td id="restaurantBigRating">\
             <p id="avgRating"> ' + outletObj.avgRating + ' </p>\
@@ -1248,7 +1250,8 @@ function putReview(outletId, reviewObj, parentElem, updateOutletInfo, next){
 			name: name,
 			desc: desc,
 			address: address,
-			link: urls
+			link: urls,
+			address: address
 		});
 
 		sanitizationUtility(param, function(err, msg, res) {
