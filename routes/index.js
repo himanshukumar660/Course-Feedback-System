@@ -399,7 +399,8 @@ router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(user
     sDesc = xss(req.body.desc);
     sAddr = xss(req.body.address);
     contact = xss(req.body.contact);
-    var link = (req.body.link).split(",");
+
+  var link = (req.body.link).split(",");
     
     console.log(link);
     for (var i =0 ; i<link.length ; i++){
