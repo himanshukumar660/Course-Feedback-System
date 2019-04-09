@@ -392,12 +392,20 @@ router.get('/outlet/regex/user/:pattern', [ensureAuthentication,getUsername], fu
 });
 
 router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(username, req, res, next){
-    var sName, sDesc, sAddr, sOwner;
+
+    var sName, sDesc, sAddr, sOwner, sLinks = [];
 
     sName = xss(req.body.name);
     sDesc = xss(req.body.desc);
     sAddr = xss(req.body.address);
     contact = xss(req.body.contact);
+
+  var link = (req.body.link).split(",");
+    
+    console.log(link);
+    for (var i =0 ; i<link.length ; i++){
+      sLinks.push(xss(link[i]));
+    }
     sOwner = username;
 
   // Form Validaiton
@@ -420,7 +428,9 @@ router.post('/outlet', [ensureAuthentication, checkOwnerPriority], function(user
       },
         desc : sDesc,
         addr : sAddr,
-        contact : contact 
+        link : sLinks,
+        contact : contact, 
+        addr : sAddr
     });
 
     //console.log(param);

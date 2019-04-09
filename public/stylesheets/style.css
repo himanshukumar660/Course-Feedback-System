@@ -275,7 +275,32 @@ ul.reviewList li{
 button{
   outline: none;
 }
-#restAddSave, #restDescSave, #restNameSave{
+
+.showLinks{
+  margin: 10px;
+  border-radius: 100%;
+  background-color: white;
+  color: black;
+}
+
+.activatedPreviewBtn{
+  margin: 10px;
+  border-radius: 100%;
+  font-weight: bolder;
+  background-color: #1973e8;
+  color: white;
+  border: none;
+}
+
+.youtubePreview{
+  display: none;
+}
+
+.activatedPreview{
+  display: block;
+}
+
+#restAddSave, #restDescSave, #restNameSave, .restLink{
   width: 96.5%;
   padding: 10px;
   margin: 10px;

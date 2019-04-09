@@ -199,7 +199,7 @@ $('#inputRegisterFeilds').keyup(function(event){
 	if(event.keyCode == 13){
 		$('#registerBtn').click();
 	}
-})
+});
 
 $(document).on('click', '#close_error', function() {
 	$(this).parent().hide();
@@ -720,6 +720,20 @@ function sanitizationUtility(dirtyObj, callback) {
 	return callback(false, "Input Sanitized", cleanObj);
 };
 
+function changeYoutubePreview(parentElem){
+	$('.showLinks').click(function(){
+		var btnId = this.id[0];
+		console.log(btnId);
+		$(parentElem).find('.showLinks').removeClass('activatedPreviewBtn');
+		$(parentElem).find('.showLinks#'+btnId+'_linkBtn').addClass('activatedPreviewBtn');
+		
+		$(parentElem).find('.youtubePreview').removeClass('activatedPreview');
+		$(parentElem).find('.youtubePreview#'+btnId+'_link').addClass('activatedPreview');
+	});
+	//display(btn, btnId, linkParent);
+	//fadeCurrent(linkParent);
+};
+
 //preAppRe --> prepend(1), append(-1), replace(0)
 function addOutletDiv(outletObj, parentElem, preAppRe) {
 
@@ -740,6 +754,26 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
             <hr/>\
             <div id="details">\
               <p id="aboutUs">' + outletObj.desc + '</p>\
+              <p id="address"> <i class="ionicons ion-location" style="padding-right:10px"></i>' + outletObj.addr + '</p>' + '<span class="YoutubeLinks">'
+
+  			for(var i=0;i<outletObj.link.length;i++){
+  				if(i==0){
+  					outletDiv = outletDiv + '<button class="showLinks activatedPreviewBtn" id="'+ i + '_linkBtn' + '" type="button">' + i + '</button>';  
+  				}	
+  				else
+            		outletDiv = outletDiv + '<button class="showLinks" id="'+ i + '_linkBtn' + '" type="button">' + i + '</button>';  				
+  			}          
+
+
+  			for(var i=0;i<outletObj.link.length;i++){
+  				if(i==0){
+  					outletDiv = outletDiv + '<span class="youtubePreview activatedPreview" id='+ i + '_link' +'><iframe width="420" height="250" src="' + outletObj.link[i] + '"></iframe></span>'
+  				}
+  				else
+            		outletDiv = outletDiv + '<span class="youtubePreview" id='+ i + '_link' +'><iframe width="420" height="250" src="' + outletObj.link[i] + '"></iframe></span>';  				
+  			}          
+
+            outletDiv = outletDiv + '</span></div>\
               <p id="address"> <i class="ionicons ion-location" style="padding-right:10px"></i>' + outletObj.addr + '</p>\
             </div>\
           </td>\
@@ -854,6 +888,7 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
 	}
 
 	starRating();
+	changeYoutubePreview(parentElem);
 }
 
 function processDate(date){
@@ -1031,6 +1066,7 @@ function findOutletObj(outletObj){
 				name: outletObj.metadata.name,
 				desc: outletObj.desc,
 				addr: outletObj.addr,
+				link: outletObj.link,
 				num_reviews : outletObj.reviews.length,
 				reviews: outletObj.reviews
 			});
@@ -1196,6 +1232,15 @@ function putReview(outletId, reviewObj, parentElem, updateOutletInfo, next){
 		var name = $(parentElem).find("input[name=restName]").val();
 		var desc = $(parentElem).find("textarea[name=restDesc]").val();
 		var address = $(parentElem).find("input[name=restAdd]").val();
+		var link = $(parentElem).find(".restLink");
+		var urls = [];
+		for(var i=0;i<4;i++){
+			var youtubeLink = link[i].value;
+			if(youtubeLink.length != 0){
+				urls.push(youtubeLink);
+			}
+		}
+		console.log(urls);
 
 		if (!name.length) {
 			return showError("Enter the name of the restaurant");
@@ -1204,6 +1249,8 @@ function putReview(outletId, reviewObj, parentElem, updateOutletInfo, next){
 		var param = new Object({
 			name: name,
 			desc: desc,
+			address: address,
+			link: urls,
 			address: address
 		});
 
@@ -1229,6 +1276,11 @@ function putReview(outletId, reviewObj, parentElem, updateOutletInfo, next){
 							$(parentElem).find("input[name=restName]").val('');
 							$(parentElem).find("textarea[name=restDesc]").val('');
 							$(parentElem).find("input[name=restAdd]").val('');
+							var link = $(parentElem).find(".restLink");
+							for(var i=0;i<4;i++){
+								link[i].val("");
+							}
+							$(parentElem).find("input[name=restLink]").val('');
 						},
 						400: function(res) {
 							showError(res.responseJSON.message);

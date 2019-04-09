@@ -68,6 +68,8 @@ block content
 						.rTool
 							div(style='display:inline-flex')
 								p.rToolBtns.rToolBtnActive.showAll Courses
+
+								p.rToolBtns.showUsers(style='display:none') Users
 								p.rToolBtns.showUsers Users
 							div(style='display:inline-flex')
 								button#logoutBtn Logout
@@ -129,6 +131,11 @@ block content
 							input(type="text" name="restName" placeholder="Course Name" autcomplete="off" id="restNameSave" required)
 							textarea(id="restDescSave" name="restDesc" placeholder="Course Description..." required )
 							input(type="text" name="restAdd" placeholder="Taken at" autcomplete="off" id="restAddSave" required)
+
+							input(type="text" name="restLink[]" placeholder="Preview Link 1 (Youtube)" autcomplete="off" class="restLink" required)
+							input(type="text" name="restLink[]" placeholder="Optional Preview Link 2 (Youtube)" autcomplete="off" class="restLink")
+							input(type="text" name="restLink[]" placeholder="Optional Preview Link 3 (Youtube)" autcomplete="off" class="restLink")
+							input(type="text" name="restLink[]" placeholder="Optional Preview Link 4 (Youtube)" autcomplete="off" class="restLink")
 							div(style="text-align:right;width:100%")
 								button#restSaveBtn.showReply(type="button") Save
 					
@@ -162,8 +169,6 @@ block content
 				
 				.ownersList
 					
-	script(src='javascripts/review.js')
-	
 	if authenticated
 		script.
 			document.getElementsByClassName("indexPage")[0].style.display = "block";

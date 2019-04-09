@@ -38,7 +38,7 @@ var reviewSchema = new Schema({
 		},
 		contact_details:{
 			type : String
-		}
+		},
 		date : {
 			type : Date,
 			default : Date.now()
@@ -65,6 +65,7 @@ var orgSchema = new Schema({
 	addr: {
 		type: String
 	},
+	link:[],
 	reviews :[reviewSchema]
 });
 
