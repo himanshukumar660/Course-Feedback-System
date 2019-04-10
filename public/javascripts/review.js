@@ -736,7 +736,7 @@ function changeYoutubePreview(parentElem){
 
 //preAppRe --> prepend(1), append(-1), replace(0)
 function addOutletDiv(outletObj, parentElem, preAppRe) {
-
+	
 	var outletDiv =
 		'<div class="sResultsMain" data-outletid='+ outletObj.uid +'>\
   	<div class="sResultBox">\
@@ -774,7 +774,6 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
   			}          
 
             outletDiv = outletDiv + '</span></div>\
-              <p id="address"> <i class="ionicons ion-location" style="padding-right:10px"></i>' + outletObj.addr + '</p>\
             </div>\
           </td>\
 		      <td id="restaurantBigRating">\
@@ -783,9 +782,9 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
               <div class="star-ratings-css">\
 								<div class="star-ratings-css-top">'
 
-								for(var i=0;i<outletObj.avgRating;i++){
-								 outletDiv = outletDiv + '<span>★</span>';
-							 }
+			for(var i=0;i<outletObj.avgRating;i++){
+				outletDiv = outletDiv + '<span>★</span>';
+			}
 
 								outletDiv = outletDiv + '</div>\
                 <div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>\
@@ -795,39 +794,53 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
           </td>\
         </tr>\
 				  </td>\
-		</tr></tbody></table>'
+		</tr></tbody></table>';
 
-		if(pType !=2){
-						outletDiv = outletDiv + '<table id="restaurantExReview">\
-								<tr id="reviewtableRow">\
-								<td style="padding-left:20px;float:left;min-width:50%;text-align:center">\
-								<div class="rStats"><div class="star-ratings-css"><div class="star-ratings-css-top">';
+		
+		outletDiv = outletDiv + '<table id="restaurantExReview">\
+				<tr id="reviewtableRow">\
+				<td style="padding-left:20px;float:left;min-width:50%;text-align:center">\
+				<div class="rStats"><div class="star-ratings-css"><div class="star-ratings-css-top">';
 
-						for(var i=0;i<outletObj.bestReview.rating;i++){
-							outletDiv = outletDiv + '<span>★</span>'
-						}
+		for(var i=0;i<outletObj.bestReview.rating;i++){
+			outletDiv = outletDiv + '<span>★</span>';
+		}
 
-						outletDiv = outletDiv + '\
-								</div><div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div></div></div>\
-								<p id="pReviewText"><i class="fa fa-quote-left" style="padding-right:10px"></i>'+ outletObj.bestReview.comment +'\
-								<p id="reviewerName">' + outletObj.bestReview.name + '</p></p>\
-								</td>\
-								<td id="sepRev">\
-								<div class="rStats"><div class="star-ratings-css"><div class="star-ratings-css-top" style="color:red">';
+		outletDiv = outletDiv + '\
+				</div><div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div></div></div>\
+				<p id="pReviewText"><i class="fa fa-quote-left" style="padding-right:10px"></i>'+ outletObj.bestReview.comment ;
 
-						for(var i=0;i<outletObj.worstReview.rating;i++){
-							outletDiv = outletDiv + '<span>★</span>'
-						}
+		if(pType == 2){
+			outletDiv = outletDiv + '<p id="reviewerName">' + 'Anonymous' + '</p>';
+		}
+		else{
+			outletDiv = outletDiv + '<p id="reviewerName">' + outletObj.bestReview.name + '</p>';
+		}
 
-						outletDiv = outletDiv + '\
-								</div><div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div></div></div>\
-								 <p id="nReviewText"><i class="fa fa-quote-left" style="padding-right:10px"></i>' + outletObj.worstReview.comment + '\
-								 <p id="reviewerName">' + outletObj.worstReview.name + '</p></p>\
-								 </td>\
-								 </tr>\
-								 </table>\
-								 <table>'
-								 console.log(pType);
+		outletDiv = outletDiv + '</p></td>\
+				<td id="sepRev">\
+				<div class="rStats"><div class="star-ratings-css"><div class="star-ratings-css-top" style="color:red">';
+
+		for(var i=0;i<outletObj.worstReview.rating;i++){
+			outletDiv = outletDiv + '<span>★</span>';
+		}
+
+		outletDiv = outletDiv + '\
+				</div><div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div></div></div>\
+				 <p id="nReviewText"><i class="fa fa-quote-left" style="padding-right:10px"></i>' + outletObj.worstReview.comment;
+		
+		if(pType == 2){
+			outletDiv = outletDiv + '<p id="reviewerName">' + 'Anonymous' + '</p>';	
+		}
+		else {
+			outletDiv = outletDiv + '<p id="reviewerName">' + outletObj.worstReview.name + '</p>';		
+		}
+		
+		outletDiv = outletDiv + '</p></td>\
+				 </tr>\
+				 </table>\
+				 <table>';
+					
 					if(pType != 2){
 								outletDiv = outletDiv + '<tbody>\
 									<tr id="resultmessage">\
@@ -837,6 +850,7 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
 										</td>\
 									</tr>'
 					}
+
 					if(pType == 1){
 									outletDiv = outletDiv + '<tr id="userCommentRating">\
 										<td>\
@@ -872,8 +886,7 @@ function addOutletDiv(outletObj, parentElem, preAppRe) {
 									</tr>\
 								</tbody>'
 					}
-							outletDiv = outletDiv + '</table>';
-		}
+		outletDiv = outletDiv + '</table>';
 
 		outletDiv = outletDiv + '</div></div>';
 
@@ -947,6 +960,9 @@ function addReviewsDiv(res, name, outletId){
 
 		var element = res.reviewList[each];
 		var posterName = element.customerName;
+		if(pType == 2){
+			posterName = "Anonymous";
+		}
 		var date = processDate(element.date);
 
 		var reviewId = element._id;
@@ -961,9 +977,11 @@ function addReviewsDiv(res, name, outletId){
 	      <table id="reviewTableDiv">\
 	        <tbody>\
 	          <tr id="reviewInfoDiv">\
-	            <td style="float:left;">\
-	              <p id="reviewerName">'+ posterName +'</p>\
-	              <p id="reviewDate">'+ date +'</p>\
+	            <td style="float:left;">';
+	            
+	            top  = top + '<p id="reviewerName">'+ posterName +'</p>';
+
+	            top = top + '<p id="reviewDate">'+ date +'</p>\
 	            </td>\
 	            <td style="float:right;">\
 							<div class="rStats"><div class="star-ratings-css">\
@@ -1008,13 +1026,13 @@ function addReviewsDiv(res, name, outletId){
 	            </td>\
 	          </tr>';
 
-						var notReplied = '<td style="float:left;width:80%">\
+			var notReplied = '<td style="float:left;width:80%">\
 						 										<textarea id="replyPostText" name="replyPostText" placeholder="Write your regards..." required />\
 						 									<td style="float:right;">\
 						 										<button id="postReply" type="button">Post</button></td>\
 																</td>';
 
-					var footerPart = '</tbody>\
+			var footerPart = '</tbody>\
 	      </table>\
 	    </li>';
 
