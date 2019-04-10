@@ -724,11 +724,11 @@ function changeYoutubePreview(parentElem){
 	$('.showLinks').click(function(){
 		var btnId = this.id[0];
 		console.log(btnId);
-		$(parentElem).find('.showLinks').removeClass('activatedPreviewBtn');
-		$(parentElem).find('.showLinks#'+btnId+'_linkBtn').addClass('activatedPreviewBtn');
+		$(this).closest('.sResultsMain').find('.showLinks').removeClass('activatedPreviewBtn');
+		$(this).closest('.sResultsMain').find('.showLinks#'+btnId+'_linkBtn').addClass('activatedPreviewBtn');
 		
-		$(parentElem).find('.youtubePreview').removeClass('activatedPreview');
-		$(parentElem).find('.youtubePreview#'+btnId+'_link').addClass('activatedPreview');
+		$(this).closest('.sResultsMain').find('.youtubePreview').removeClass('activatedPreview');
+		$(this).closest('.sResultsMain').find('.youtubePreview#'+btnId+'_link').addClass('activatedPreview');
 	});
 	//display(btn, btnId, linkParent);
 	//fadeCurrent(linkParent);
