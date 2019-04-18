@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  feedback-system:
+    container_name: feedback-system
+    build: .
+    command: bash start.sh
+    volumes: [ ".:/feedback-system" ]
+    ports: [ "3000:3000" ]
+    networks: [ feed-net ]
+    links: [ feedback-system-mongo ]
+
+  feedback-system-mongo:
+    container_name: feedback-system-mongo
+    image: mongo
+    ports: [ "27017:27017" ]
+    networks: [ feed-net ]
+    volumes: [ "./data/db:/data/db" ]
+    command: bash -c "mongod --dbpath=./data/db --logpath=/dev/null"
+
+networks:
+    feed-net:
